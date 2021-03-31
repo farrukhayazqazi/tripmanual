@@ -12,13 +12,69 @@ class BookingDetails extends Component{
         e.preventDefault();
         if(e.target.id == 'plus'){
         this.setState({NumOfTravelers: this.state.NumOfTravelers + 1 })
+        
         }
         else if(e.target.id == 'minus'){
            this.state.NumOfTravelers > 1 ? this.setState({NumOfTravelers: this.state.NumOfTravelers - 1 }) : alert("can't be less than that :)")
         }
     }
 
+
+
     render(){
+
+      const numberOfTravelers = () =>{
+        var travellors = [];
+        
+        
+        for(let t = 0; t < this.state.NumOfTravelers; t++){
+          travellors.push(
+            <div >
+            <h4> Traveller # {t+1} Details</h4><br/>
+        
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputFirstName4">First Name</label>
+                <input type="FirstName" className="form-control" id="inputFirstName4" placeholder="FirstName" />
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputLastName4">Last Name</label>
+                <input type="LastName" className="form-control" id="inputLastName4" placeholder="LastName" />
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputAddress">Address</label>
+              <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputAddress2">Address 2</label>
+              <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
+            </div>
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputCity">City</label>
+                <input type="text" className="form-control" id="inputCity" />
+              </div>
+              <div className="form-group col-md-4">
+                <label htmlFor="inputState">State</label>
+                <select id="inputState" className="form-control">
+                  <option selected>Choose...</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div className="form-group col-md-2">
+                <label htmlFor="inputZip">Zip</label>
+                <input type="text" className="form-control" id="inputZip" />
+              </div>
+            </div>
+            </div>);
+          
+        }
+      return travellors
+        
+      }
+
+
     return(
         <div className='container'>
             
@@ -31,7 +87,7 @@ class BookingDetails extends Component{
                 <div className="card">
                 <div className="card-horizontal">
                     <div className="img-square-wrapper">
-                    <img className src="http://via.placeholder.com/300x180" alt="Card image cap" />
+                    <img className src="https://storage.googleapis.com/wzukusers/user-18718137/images/5a614fd1db303ife9Ait/amazing-736885.png" alt="Card image cap" />
                     </div>
                     <div className="card-body">
                     <h4 className="card-title">Card title</h4>
@@ -55,42 +111,56 @@ class BookingDetails extends Component{
                     <br/>
         <hr/><br/>
         <form>
-        <h4>Traveler Details</h4><br/>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="inputFirstName4">First Name</label>
-            <input type="FirstName" className="form-control" id="inputFirstName4" placeholder="FirstName" />
+
+        
+
+        { this.state.NumOfTravelers == 1 ? (
+          
+          <div>
+          <h4> Traveller Details</h4><br/>
+        
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <label htmlFor="inputFirstName4">First Name</label>
+              <input type="FirstName" className="form-control" id="inputFirstName4" placeholder="FirstName" />
+            </div>
+            <div className="form-group col-md-6">
+              <label htmlFor="inputLastName4">Last Name</label>
+              <input type="LastName" className="form-control" id="inputLastName4" placeholder="LastName" />
+            </div>
           </div>
-          <div className="form-group col-md-6">
-            <label htmlFor="inputLastName4">Last Name</label>
-            <input type="LastName" className="form-control" id="inputLastName4" placeholder="LastName" />
+          <div className="form-group">
+            <label htmlFor="inputAddress">Address</label>
+            <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
           </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="inputAddress">Address</label>
-          <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="inputAddress2">Address 2</label>
-          <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="inputCity">City</label>
-            <input type="text" className="form-control" id="inputCity" />
+          <div className="form-group">
+            <label htmlFor="inputAddress2">Address 2</label>
+            <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
           </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="inputState">State</label>
-            <select id="inputState" className="form-control">
-              <option selected>Choose...</option>
-              <option>...</option>
-            </select>
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <label htmlFor="inputCity">City</label>
+              <input type="text" className="form-control" id="inputCity" />
+            </div>
+            <div className="form-group col-md-4">
+              <label htmlFor="inputState">State</label>
+              <select id="inputState" className="form-control">
+                <option selected>Choose...</option>
+                <option>...</option>
+              </select>
+            </div>
+            <div className="form-group col-md-2">
+              <label htmlFor="inputZip">Zip</label>
+              <input type="text" className="form-control" id="inputZip" />
+            </div>
+          </div>    
           </div>
-          <div className="form-group col-md-2">
-            <label htmlFor="inputZip">Zip</label>
-            <input type="text" className="form-control" id="inputZip" />
-          </div>
-        </div>
+        ): numberOfTravelers()
+          }
+
+       
+
+
         <div className="form-group">
           <div className="form-check">
             <input className="form-check-input" type="checkbox" id="gridCheck" />

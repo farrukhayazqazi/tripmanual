@@ -1,15 +1,15 @@
 import './App.css';
-import Home from './components/user/Home.js';
-import NavBar from './components/Layout/NavBar.js';
-import Footer from './components/Layout/Footer.js';
-import Banner from './components/user/Banner.js'
-import Card from './components/user/Card.js'
-import TripDetails from './components/user/TripDetails.js'
-import BookingDetails from './components/user/BookingDetails.js'
-import Login from './components/user/Login.js'
+import Home from './components/user/Home.jsx';
+import NavBar from './components/Layout/NavBar.jsx';
+import Footer from './components/Layout/Footer.jsx';
+import Banner from './components/user/Banner.jsx'
+import Card from './components/user/Card.jsx'
+import TripDetails from './components/user/TripDetails.jsx'
+import BookingDetails from './components/user/BookingDetails.jsx'
+import Login from './components/user/Login.jsx'
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import Signup from './components/user/Signup';
+import Signup from './components/user/Signup.jsx';
 
 
 function App() {

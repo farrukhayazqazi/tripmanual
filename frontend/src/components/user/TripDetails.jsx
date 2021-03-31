@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import { Redirect } from 'react-router-dom';
-import Review from './Review.js';
+import Review from './Review.jsx';
 
 
 class TripDetails extends Component{
