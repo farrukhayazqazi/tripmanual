@@ -7,9 +7,11 @@ import Card from './components/user/Card.jsx'
 import TripDetails from './components/user/TripDetails.jsx'
 import BookingDetails from './components/user/BookingDetails.jsx'
 import Login from './components/user/Login.jsx'
+import TLogin from './components/travelAgency/TLogin.jsx'
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import Signup from './components/user/Signup.jsx';
+import TSignup from './components/travelAgency/TSignup.jsx';
 
 
 function App() {
@@ -18,11 +20,16 @@ function App() {
     <div className="App">
     <NavBar />
     <Route exact path='/' render={(props) => <Banner {...props} /> } />
-    <Route path='/trip/:id' render={(props) => <TripDetails {...props} /> } />
-    <Route path='/BookingDetails/:id' render={(props) => <BookingDetails {...props} /> } />
-    <Route path='/login/' render={(props) => <Login {...props} /> } />
-    <Route path='/signup/' render={(props) => <Signup {...props} /> } />
-     <Footer />
+    {/*User Routes*/}
+    <Route path='/user/trip/:id' render={(props) => <TripDetails {...props} /> } />
+    <Route path='/user/BookingDetails/:id' render={(props) => <BookingDetails {...props} /> } />
+    <Route path='/user/login/' render={(props) => <Login {...props} /> } />
+    <Route path='/user/signup/' render={(props) => <Signup {...props} /> } />
+
+    {/*Travel Agency Routes*/}
+    <Route path='/travelAgency/tlogin/' render={(props) => <TLogin {...props} /> } />
+    <Route path='/travelAgency/tsignup/' render={(props) => <TSignup {...props} /> } />
+    <Footer />
     </div>
     </BrowserRouter>
   );

@@ -11,7 +11,7 @@ class TripDetails extends Component{
 
   handleClick = (e) =>{
     e.preventDefault();
-    this.props.history.push(`/BookingDetails/${this.state.id}`);
+    this.props.history.push(`/user/BookingDetails/${this.state.id}`);
   }
 
     render(){

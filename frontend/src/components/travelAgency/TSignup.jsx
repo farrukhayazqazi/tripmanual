@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import signup from '../assets/images/signup.jpg';
+import tsignup from '../assets/images/tsignup.jpg';
 
-class Signup extends Component{
+class TSignup extends Component{
 
     
     render(){
@@ -11,7 +11,7 @@ class Signup extends Component{
             
             <div className="row m-5 no-gutters shadow-lg">
             <div className="col-md-6 d-none d-md-block">
-              <img src={signup} className="img-fluid" style={{minHeight: '100%'}} />
+              <img src={tsignup} className="img-fluid" style={{minHeight: '100%'}} />
             </div>
             <div className="col-md-6 bg-white p-5">
               <h3 className="pb-3">Sign up</h3>
@@ -45,12 +45,9 @@ class Signup extends Component{
                 </form>
 
                 <div className="pt-4 text-center">
-                  <h6>Already have an account? <a href="/login/">Login</a></h6>
+                <h6>Want to login in as a travel agency? <a href="/travelAgency/tlogin/">Login</a></h6>
                 </div>
 
-                <div className="pt-4 text-center TLogin">
-                <h6>Signup as a travel agency <a href="/travelAgency/tsignup">TSignup</a></h6>
-              </div>
               </div>
             </div>
           </div>
@@ -59,4 +56,4 @@ class Signup extends Component{
 
 }
 }
-export default Signup;
+export default TSignup;

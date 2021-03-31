@@ -31,7 +31,7 @@ class BookingDetails extends Component{
           travellors.push(
             <div >
             <h4> Traveller # {t+1} Details</h4><br/>
-        
+            
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label htmlFor="inputFirstName4">First Name</label>
