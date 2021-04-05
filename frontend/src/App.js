@@ -12,6 +12,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import Signup from './components/user/Signup.jsx';
 import TSignup from './components/travelAgency/TSignup.jsx';
+import Dashboard from './components/travelAgency/Dashboard';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
     {/*Travel Agency Routes*/}
     <Route path='/travelAgency/tlogin/' render={(props) => <TLogin {...props} /> } />
     <Route path='/travelAgency/tsignup/' render={(props) => <TSignup {...props} /> } />
+    <Route exact path='/travelAgency/dashboard' render={(props) => <Dashboard {...props} /> } />
     <Footer />
     </div>
     </BrowserRouter>

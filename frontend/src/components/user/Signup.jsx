@@ -45,7 +45,7 @@ class Signup extends Component{
                 </form>
 
                 <div className="pt-4 text-center">
-                  <h6>Already have an account? <a href="/login/">Login</a></h6>
+                  <h6>Already have an account? <a href="/user/login/">Login</a></h6>
                 </div>
 
                 <div className="pt-4 text-center TLogin">

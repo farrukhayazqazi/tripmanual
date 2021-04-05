@@ -6,8 +6,8 @@ class Login extends Component{
         
         return(
             <div className='container'>
-            
-            <div className="row m-5 no-gutters shadow-lg">
+
+            <div className="row m-5 no-gutters shadow-lg">  
             <div className="col-md-6 d-none d-md-block">
               <img src={login} className="img-fluid" style={{minHeight: '100%'}} />
             </div>
@@ -15,7 +15,7 @@ class Login extends Component{
               
               <h3 className="pb-3">Log in</h3>
               <div className="form-style">
-                <form>
+                <form>                                    
                   <div className="form-group pb-3">    
                     <input type="email" placeholder="Email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />   
                   </div>
@@ -32,13 +32,13 @@ class Login extends Component{
                 </form>
 
                 <div className="pt-4 text-center">
-                  <h6>Do not have an account? <a href="/signup/">Sign Up</a></h6>
+                  <h6>Do not have an account? <a href="/user/signup/">Sign Up</a></h6>
                 </div>
 
                 <div className="pt-4 text-center TLogin">
                 <h6>Login as a travel agency <a href="/travelAgency/tlogin/">TLogin</a></h6>
               </div>
-              </div>
+            </div>
               </div>
             </div>
     
