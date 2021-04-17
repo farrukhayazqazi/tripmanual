@@ -103,6 +103,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Helvetica';
   }
 
   .searchbar{
@@ -373,7 +374,8 @@ div.content {
 }
 
 .dashboard{
-  margin-top: 50px;
+  margin-top: 20px;
+
 }
 
 
@@ -386,17 +388,14 @@ div.content {
   font-weight: bold;
 }
 
-.card-title{
-  padding-bottom: 140px;
-  color: #ebebeb;
-  
-}
+
 
 .dashboard-card{
   justify-content: center;
+  margin-bottom: -100px;
 }
 
-.card-img-overlay button{
+.card-img-overlay a{
 
 font-family: sans-serif;
 font-weight: bolder;
@@ -407,3 +406,32 @@ margin: 4px 2px;
 border-radius: 50%;
 }
 
+.trip-card{
+  justify-content: center;
+}
+
+.create-trip{
+  padding-top: -50px;
+  margin-top: -60px;
+  
+}
+
+.create-title{
+  padding-top: 45px;
+}
+
+.create-title h5{
+  font-weight: bolder;
+}
+
+
+.trip-images img{
+  width: 250px;
+  height: 170px;
+  padding-right: 10px;
+  padding-top: 10px;
+}
+
+.itinerary-list{
+  margin-bottom: 25px;
+}

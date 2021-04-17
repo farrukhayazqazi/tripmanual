@@ -61,7 +61,7 @@ class TripDetails extends Component{
         </div>
         <div className="card-body">
           <h6>Tour Operator: <b> Tour operator name</b></h6><br/>
-          <h6 className="card-title">Available Seats: <b>26</b></h6><br/>
+          <h6>Available Seats: <b>26</b></h6><br/>
           <h6>Days left: <b> 4</b></h6><br/>
           <h6>Departure from: <b>Lahore</b></h6><br/>
           <h6>Date and Time: <b>22-06-21 - 4:06 AM</b></h6>
