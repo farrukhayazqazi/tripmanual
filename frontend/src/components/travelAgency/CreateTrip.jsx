@@ -130,6 +130,14 @@ class CreateTrip extends Component{
                 <br/>
                 <hr/>
 
+                <div className='create-title'>
+                    <h5>Trip Description</h5><br/>
+                    <div className="form-group">
+                    <textarea className="form-control" placeholder="write detailed description about the trip with timings..." id="exampleFormControlTextarea1" rows={3} defaultValue={""} />
+                  </div>
+                  </div>
+                  <hr/>
+
                 <div className="create-title">
                 <h5>Trip Itinernary</h5>
                 </div>

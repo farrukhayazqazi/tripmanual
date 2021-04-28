@@ -1,11 +1,12 @@
 const express = require('express');
+require('./db/mongoose')
 const userRoutes = require('./routers/user')
 const tripRoutes = require('./routers/trip')
 const travelAgencyRoutes = require('./routers/travelAgency')
 
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 
 app.use(express.json())
