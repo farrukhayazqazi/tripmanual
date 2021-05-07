@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -42,11 +44,69 @@ phone:{
     minlength: 11,
     trim: true
 
+},
+
+tokens: [{
+    token:{
+        type: String,
+        required: true
+    }
+}]
+
+
+
+
+})
+
+// only returning non-confidential data back into JSON
+travelAgencySchema.methods.toJSON = function() {
+    const travelagency = this
+    const travelagencyObject = travelagency.toObject()
+
+    delete travelagencyObject.password
+    delete travelagencyObject.tokens
+
+    return travelagencyObject
+}
+// generating authentication token
+travelAgencySchema.methods.generateAuthToken = async function () {
+    const travelagency = this
+    const token = jwt.sign({ _id: travelagency._id.toString() }, 'finalyearproject')
+
+    // storing token in tokens array
+    travelagency.tokens = travelagency.tokens.concat({ token })
+    await travelagency.save()
+
+    return token
+
 }
 
+// to find the user by credentials when logging in
+travelAgencySchema.statics.findByCredentials = async (email, password) =>{
+    const travelagency = await TravelAgency.findOne({ email });
 
+    if(!travelagency){
+        throw new Error('Unable to login')
+    }
 
+    const isMatch = await bcrypt.compare(password, travelagency.password);
 
+    if(!isMatch){
+        throw new Error('Unable to login');
+
+    }
+    return travelagency
+}
+
+// Hash the plain text password before saving
+travelAgencySchema.pre('save', async function(next){
+    const travelagency = this;
+
+    if(travelagency.isModified('password')){
+        travelagency.password = await bcrypt.hash(travelagency.password, 8)
+    }
+
+    next()
 })
 
 

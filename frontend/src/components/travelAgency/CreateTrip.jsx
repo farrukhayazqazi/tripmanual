@@ -9,7 +9,7 @@ class CreateTrip extends Component{
     state = {
         NumOfDays : 1,
         itinerary : [],
-        file: [],
+        images: [],
         title: '',
         included: [],
         seats: null,
@@ -17,13 +17,47 @@ class CreateTrip extends Component{
 
     }
 
+    Check = () =>{
+        console.log(this.state)
+    }
 
+    handleChange = (e) =>{
+        this.setState({
+            [e.target.id] : e.target.value
+        });
+    }
 
+    handleCheckBox = (e) =>{
+        let included = [...this.state.included, e.target.id]
+            if(this.state.included.includes(e.target.id)){
+                    included = included.filter(i => i !== e.target.id)
+                }
+        this.setState({included})
+    }
+
+    setImages = (e) =>{
+        e.preventDefault();
+        this.setState({ images: [] });
+        const imageFiles = e.target.files
+
+        for(var i = 0; i < imageFiles.length; i++){
+            let reader = new FileReader();
+            let file = imageFiles[i];
+
+            reader.onloadend = () =>{
+                this.setState({ images: this.state.images.concat(reader.result) });
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
 
 
     handleSubmit = (e) =>{
         e.preventDefault();
     }
+
+
 
     handleClick = (e) =>{
         e.preventDefault();
@@ -78,7 +112,7 @@ class CreateTrip extends Component{
             for(let d = this.state.NumOfDays; d > 0; d--){
               days.push(
                 <div className="input-group mb-3" onSubmit={this.addItinerary}>
-                    <input type="text" className="form-control"  ref={(ip) => {this.newText = ip}} placeholder={`Day ${d}`} aria-label="Day 01" aria-describedby="basic-addon2" />
+                    <input type="text" className="form-control" ref={(ip) => {this.newText = ip}} placeholder={`Day ${d}`} aria-label="Day 01" aria-describedby="basic-addon2" />
                     <button className="btn btn-outline-secondary" onClick={this.addItinerary} type="button">+</button>
                 </div>
               );
@@ -109,7 +143,7 @@ class CreateTrip extends Component{
             <form>
             <div className="input-group mb-3">
             <h4>Trip Title: &nbsp; &nbsp;</h4>
-            <input type="text" className="form-control"  placeholder='Trip Title' aria-label="Trip Title" aria-describedby="basic-addon2" />
+            <input type="text" className="form-control" onChange={this.handleChange} id="title" placeholder='Trip Title' aria-label="Trip Title" aria-describedby="basic-addon2" />
             </div>
             <br/><br/>
             <hr/>
@@ -123,8 +157,9 @@ class CreateTrip extends Component{
 
                   <div className="col-sm-9">
                     <span className="btn btn-default btn-file">
-                      <input id="input-2" name="input2[]"  type="file" className="file" multiple data-show-upload="true" data-show-caption="true" />
+                      <input id="images" onChange={this.setImages} name="input2[]"  type="file" className="file" multiple data-show-upload="true" data-show-caption="true" />
                     </span>
+                    {this.state.images.map((item, index) => <img src={item} />)}
                   </div>
                     
                 <br/>
@@ -133,7 +168,7 @@ class CreateTrip extends Component{
                 <div className='create-title'>
                     <h5>Trip Description</h5><br/>
                     <div className="form-group">
-                    <textarea className="form-control" placeholder="write detailed description about the trip with timings..." id="exampleFormControlTextarea1" rows={3} defaultValue={""} />
+                    <textarea className="form-control" id="description" placeholder="write detailed description about the trip with timings..." id="exampleFormControlTextarea1" rows={3} defaultValue={""} />
                   </div>
                   </div>
                   <hr/>
@@ -172,47 +207,47 @@ class CreateTrip extends Component{
 
                 <div className="row">
                     <div className="col-4">
-                        <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" />
-                        <label className="form-check-label" htmlFor="defaultCheck1">Dedicated Transportation Air conditioned latest Model Vehicle</label>
+                        <input className="form-check-input" onChange={this.handleeCheckBox} type="checkbox" defaultValue id="Dedicated Transportation Air conditioned latest Model Vehicle" />
+                        <label className="form-check-label" htmlFor="included1">Dedicated Transportation Air conditioned latest Model Vehicle</label>
                     <br/><br/>
-                        <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck2" />
-                        <label className="form-check-label" htmlFor="defaultCheck2">All Fees and Taxes</label>
+                        <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="All Fees and Taxes" />
+                        <label className="form-check-label" htmlFor="included2">All Fees and Taxes</label>
                     <br/>
                     <br/>
-                        <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck3" />
-                        <label className="form-check-label" htmlFor="defaultCheck3">luxury 3 Star  Accomodations</label>
+                        <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="luxury 3 Star  Accomodations" />
+                        <label className="form-check-label" htmlFor="included3">luxury 3 Star  Accomodations</label>
                     <br/><br/>
-                        <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" />
-                        <label className="form-check-label" htmlFor="defaultCheck1">Sightseeing Tour</label>
+                        <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="Sightseeing Tour" />
+                        <label className="form-check-label" htmlFor="included1">Sightseeing Tour</label>
                     <br/><br/>
                 </div>
 
                 <div className="col-4">
-                    <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" />
-                    <label className="form-check-label" htmlFor="defaultCheck1">Breakfast</label>
+                    <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="Breakfast" />
+                    <label className="form-check-label" htmlFor="included1">Breakfast</label>
                 <br/><br/>
-                    <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" />
-                    <label className="form-check-label" htmlFor="defaultCheck1">Lunch</label>
+                    <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="Lunch" />
+                    <label className="form-check-label" htmlFor="included1">Lunch</label>
                 <br/><br/>
-                    <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" />
-                    <label className="form-check-label" htmlFor="defaultCheck1">Dinner</label>
+                    <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="Dinner" />
+                    <label className="form-check-label" htmlFor="included1">Dinner</label>
                 <br/><br/>
-                    <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" />
-                    <label className="form-check-label" htmlFor="defaultCheck1">Hotel Accomodations</label>
+                    <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="Hotel Accomodations" />
+                    <label className="form-check-label" htmlFor="included1">Hotel Accomodations</label>
                 <br/><br/>
                 </div>
 
                 <div className="col-4">
-                    <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck2" />
-                    <label className="form-check-label" htmlFor="defaultCheck2">4X4 Jeep Rides</label>
+                    <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="4X4 Jeep Rides" />
+                    <label className="form-check-label" htmlFor="included2">4X4 Jeep Rides</label>
                 <br/>
                 <br/>
-                    <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck3" />
-                    <label className="form-check-label" htmlFor="defaultCheck3">Tour Guide</label>
+                    <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="Tour Guide" />
+                    <label className="form-check-label" htmlFor="included3">Tour Guide</label>
                 <br/>
                 <br/>
-                    <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" />
-                    <label className="form-check-label" htmlFor="defaultCheck1">Sightseeing Tour</label>
+                    <input className="form-check-input" onChange={this.handleCheckBox} type="checkbox" defaultValue id="Sightseeing Tour" />
+                    <label className="form-check-label" htmlFor="included1">Sightseeing Tour</label>
                 <br/>
                 <br/>
                 </div>
@@ -222,21 +257,21 @@ class CreateTrip extends Component{
             <hr/>
                 
             <div className="create-title">
-                <h5>Available Seats &nbsp; &nbsp;<input max='30' className="col-1" type="number" min='1' defaultValue='1' /></h5>
+                <h5>Available Seats &nbsp; &nbsp;<input max='30' onChange={this.handleChange} id="seats" className="col-1" type="number" min='1' defaultValue='1' /></h5>
             </div>
             <hr/>
 
             <div className="create-title">
                 <h5>Date and Time</h5><br/><br/>
-                From :&nbsp;<input type='date' />&nbsp;&nbsp; at:&nbsp;<input type='time'/> <br/><br/>
-                To :&nbsp;<input type='date' />&nbsp;&nbsp;at:&nbsp;<input type='time'/>
+                From :&nbsp;<input type='date' onChange={this.handleChange} id="DateAndTime"  />&nbsp;&nbsp; at:&nbsp;<input type='time' onChange={this.handleChange} id="DateAndTime"/> <br/><br/>
+                To :&nbsp;<input type='date' onChange={this.handleChange} id="DateAndTime" />&nbsp;&nbsp;at:&nbsp;<input type='time' onChange={this.handleChange} id="DateAndTime"/>
             </div>
             
 
             <br/><br/><br/>
             <input style={{marginLeft:'300px'}} className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" /> 
             <p style={{ fontSize: '15px' }}>Make sure you have agreed to all the terms & conditions of tripmanual</p>
-            <button type="button" class="btn btn-secondary btn-lg btn-block">Create Trip</button>
+            <button type="button" onClick={this.Check} class="btn btn-secondary btn-lg btn-block">Create Trip</button>
 
           </form>
 
