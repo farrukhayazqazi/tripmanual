@@ -13,7 +13,8 @@ class CreateTrip extends Component{
         title: '',
         included: [],
         seats: null,
-        DateAndTime: []
+        startingDateAndTime: { "date" : null, "time": null},
+        endingDateAndTime: { "date" : null, "time": null}
 
     }
 
@@ -52,6 +53,30 @@ class CreateTrip extends Component{
         }
     }
 
+    handleDateAndTime = (e) =>{
+
+        if(e.target.id === "startingDate"){
+            let startingDateAndTime = { ...this.state.startingDateAndTime ,"date": e.target.value }
+            this.setState({startingDateAndTime})
+        }
+
+        else if(e.target.id === "startingTime"){
+            let startingDateAndTime = { ...this.state.startingDateAndTime, "time": e.target.value }
+            this.setState({startingDateAndTime})
+        }
+
+        else if(e.target.id === "endingDate"){
+            let endingDateAndTime = {  ...this.state.endingDateAndTime, "date": e.target.value }
+            this.setState({endingDateAndTime})
+        }
+     
+        else if(e.target.id === "endingTime"){
+            let endingDateAndTime = { ...this.state.endingDateAndTime, "time": e.target.value }
+            this.setState({endingDateAndTime})
+        }
+
+    }
+
 
     handleSubmit = (e) =>{
         e.preventDefault();
@@ -63,18 +88,21 @@ class CreateTrip extends Component{
         e.preventDefault();
         if(e.target.id === 'plus'){
         this.setState({NumOfDays: this.state.NumOfDays + 1 })
+        this.count++;
         
         }
         else if(e.target.id === 'minus'){
            this.state.NumOfDays > 1 ? this.setState({NumOfDays: this.state.NumOfDays - 1 }) : alert("can't be less than that :)")
+            this.count--;
         }
     }
 
     itineraryCount = 1;
+    count = this.state.NumOfDays;
 
     addItinerary = (e) =>{
         e.preventDefault();
-        
+        this.count--;
         // console.log('in addItinerary', this.state.itinerary)
         var itinerary = [...this.state.itinerary];
         itinerary.push('Day '+ this.itineraryCount + ': '+ this.newText.value);
@@ -82,7 +110,7 @@ class CreateTrip extends Component{
         this.setState({itinerary});
         // this.newText.type = 'hidden'
         // e.target.value = 'hidden'
-        this.setState({ NumOfDays: this.state.NumOfDays - 1})
+        // this.setState({ NumOfDays: this.state.NumOfDays - 1})
         this.newText.placeholder = 'Day '+ this.itineraryCount;
         this.itineraryCount++;
     }
@@ -109,7 +137,8 @@ class CreateTrip extends Component{
             var days = [];
             
             
-            for(let d = this.state.NumOfDays; d > 0; d--){
+            
+            for(let d = this.count ; d > 0; d--){
               days.push(
                 <div className="input-group mb-3" onSubmit={this.addItinerary}>
                     <input type="text" className="form-control" ref={(ip) => {this.newText = ip}} placeholder={`Day ${d}`} aria-label="Day 01" aria-describedby="basic-addon2" />
@@ -181,7 +210,7 @@ class CreateTrip extends Component{
             
                 {   
                     this.state.itinerary.map(function(itinerary) {
-                    return <li>{itinerary}</li>
+                    return <li key={itinerary}>{itinerary}</li>
                })}
               
                <br/>
@@ -263,8 +292,8 @@ class CreateTrip extends Component{
 
             <div className="create-title">
                 <h5>Date and Time</h5><br/><br/>
-                From :&nbsp;<input type='date' onChange={this.handleChange} id="DateAndTime"  />&nbsp;&nbsp; at:&nbsp;<input type='time' onChange={this.handleChange} id="DateAndTime"/> <br/><br/>
-                To :&nbsp;<input type='date' onChange={this.handleChange} id="DateAndTime" />&nbsp;&nbsp;at:&nbsp;<input type='time' onChange={this.handleChange} id="DateAndTime"/>
+                Start at :&nbsp;<input type='date' onChange={this.handleDateAndTime} id="startingDate"  />&nbsp;&nbsp; at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="startingTime"/> <br/><br/>
+                Ends at :&nbsp;<input type='date' onChange={this.handleDateAndTime} id="endingDate" />&nbsp;&nbsp;at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="endingTime"/>
             </div>
             
 
