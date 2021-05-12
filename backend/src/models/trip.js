@@ -7,6 +7,11 @@ const tripSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    
+    days:{
+        type: Number,
+        required: true
+    },
 
     // images:{},
 
@@ -32,18 +37,57 @@ const tripSchema = new mongoose.Schema({
         required: true,
         default: 1
     },
-    date:{
-        type: Date,
-        required: true
-    },
 
+    endingDateAndTime: [{
+        date: {
+            type: String,
+            required: true
+        },
+
+        time:{
+            type: String,
+            required: true 
+        }
+    }],
+
+    startingDateAndTime: [{
+        date: {
+            type: String,
+            required: true
+        },
+
+        time:{
+            type: String,
+            required: true 
+        }
+    }],
+    
     //completed? : boolean true or false (when the trip is over)
+    completed: {
+        type: Boolean,
+        default: false
+    },
 
     reviews:{
         type: String,
+    },
+
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'TravelAgency'
     }
 })
 
+// if the trip tenure is completed 
+
+tripSchema.methods.isCompleted = () =>{
+    const trip = this
+
+    if(trip.endingDateAndTime.date == Date.now){
+        trip.completed = true;
+    }
+}
 
 const Trip = mongoose.model('Trip', tripSchema);
 

@@ -58,6 +58,13 @@ tokens: [{
 
 })
 
+// virtual property set up to make the relationship b/w travelagency and trips
+travelAgencySchema.virtual('trips',{
+    ref: "Trip",
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 // only returning non-confidential data back into JSON
 travelAgencySchema.methods.toJSON = function() {
     const travelagency = this

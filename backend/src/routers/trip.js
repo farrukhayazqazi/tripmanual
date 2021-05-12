@@ -16,7 +16,10 @@ router.post('/trip/create', auth, async (req, res) =>{
 
     if(req.travelagency){    
 
-        const trip = Trip(req.body);
+        const trip = Trip({
+                ...req.body,
+                owner: req.travelagency._id
+        });
 
         try{
 
