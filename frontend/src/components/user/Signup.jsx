@@ -1,8 +1,38 @@
 import React, { Component } from 'react';
 import signup from '../assets/images/signup.jpg';
+import { Link } from 'react-router-dom';
 
 class Signup extends Component{
 
+  state = {
+    firstName: null ,
+    lastName: null ,
+    email: null ,
+    password: null ,
+    confirmPassword: null,
+    phone: null
+  }
+
+
+
+  handleChange = (e) =>{
+    this.setState({[e.target.id] : e.target.value });
+  }
+
+  handleSubmit = (e) =>{
+    e.preventDefault();
+
+    const { password, confirmPassword } = this.state;
+
+    if(password !== confirmPassword){
+      return alert("passwords do not match !")
+    }
+
+    this.props.signUp(this.state)
+    this.props.history.push("/user/login")
+    console.log(this.state)
+    
+  }
     
     render(){
         
@@ -16,25 +46,25 @@ class Signup extends Component{
             <div className="col-md-6 bg-white p-5">
               <h3 className="pb-3">Sign up</h3>
               <div className="form-style">
-                <form>
+                <form onSubmit={this.handleSubmit} >
                 <div className="form-group pb-3">    
-                <input type="firstname" placeholder="FirstName" className="form-control" id="exampleInputFirstName" aria-describedby="FirstNameHelp" />   
+                <input type="firstname" required="true" placeholder="First Name" className="form-control" onChange={this.handleChange} id="firstName" aria-describedby="FirstNameHelp" />   
                 </div>
                 <div className="form-group pb-3">    
-                <input type="secondname" placeholder="SecondName" className="form-control" id="exampleInputSecondName" aria-describedby="SecondNameHelp" />   
+                <input type="secondname" required="true" placeholder="Last Name" className="form-control" onChange={this.handleChange} id="lastName" aria-describedby="SecondNameHelp" />   
                 </div>
                   <div className="form-group pb-3">    
-                    <input type="email" placeholder="Email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />   
+                    <input type="email" required="true" placeholder="Email" className="form-control" onChange={this.handleChange} id="email" aria-describedby="emailHelp" />   
                   </div>
                   <div className="form-group pb-3">   
-                    <input type="password" placeholder="Password" className="form-control" id="exampleInputPassword1" />
+                    <input type="password" required="true" placeholder="Password" className="form-control" onChange={this.handleChange} id="password" />
                   </div>
 
                   <div className="form-group pb-3">   
-                  <input type="password" placeholder="Re-enter Password" className="form-control" id="exampleInputPassword1" />
+                  <input type="password" required="true" placeholder="Re-enter Password" className="form-control" onChange={this.handleChange} id="confirmPassword" />
                 </div>
                 <div className="form-group pb-3">    
-                <input type="tel" placeholder="Phone" className="form-control" id="exampleInputPhone" aria-describedby="PhoneHelp" />   
+                <input type="tel" required="true" placeholder="Phone" className="form-control" onChange={this.handleChange} id="phone" aria-describedby="PhoneHelp" />   
               </div>
                   <div className="d-flex align-items-center justify-content-between">
                    
@@ -44,12 +74,21 @@ class Signup extends Component{
                   </div>
                 </form>
 
+                { this.props.errors.length > 0 ? 
+                  
+                  <div className="error-messages">
+                    <h6>{this.props.errors.error}</h6>
+                  </div>
+
+                  : 
+                  null }
+
                 <div className="pt-4 text-center">
-                  <h6>Already have an account? <a href="/user/login/">Login</a></h6>
+                  <h6>Already have an account? <Link to="/user/login/">Login</Link></h6>
                 </div>
 
                 <div className="pt-4 text-center TLogin">
-                <h6>Signup as a travel agency <a href="/travelAgency/tsignup">TSignup</a></h6>
+                <h6>Signup as a travel agency <Link to="/travelAgency/tsignup">TSignup</Link></h6>
               </div>
               </div>
             </div>

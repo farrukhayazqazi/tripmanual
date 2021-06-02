@@ -436,3 +436,12 @@ border-radius: 50%;
 .itinerary-list{
   margin-bottom: 25px;
 }
+
+#username{
+  color:rgb(184, 178, 178);
+  margin-top: 9px;
+  padding-right: 5px;
+  padding-left: 10px;
+  font-weight: bold;
+  font-size: 15px;
+}

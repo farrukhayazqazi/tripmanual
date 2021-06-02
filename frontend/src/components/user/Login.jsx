@@ -1,6 +1,23 @@
 import React, { Component } from 'react';
 import login from '../assets/images/login.jpg';
+import { Link } from "react-router-dom";
 class Login extends Component{
+
+    state = {
+      email: null,
+      password: null
+    }
+
+    
+  handleChange = (e) =>{
+    this.setState({[e.target.id] : e.target.value });
+  }
+
+  handleSubmit = (e) =>{
+    e.preventDefault();
+    this.props.authenticate(this.state)
+    this.props.history.push("/")
+  }
 
     render(){
         
@@ -15,12 +32,12 @@ class Login extends Component{
               
               <h3 className="pb-3">Log in</h3>
               <div className="form-style">
-                <form>                                    
+                <form  onSubmit={this.handleSubmit} >                                    
                   <div className="form-group pb-3">    
-                    <input type="email" placeholder="Email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />   
+                    <input type="email" placeholder="Email" className="form-control" onChange={this.handleChange} id="email" aria-describedby="emailHelp" />   
                   </div>
                   <div className="form-group pb-3">   
-                    <input type="password" placeholder="Password" className="form-control" id="exampleInputPassword1" />
+                    <input type="password" placeholder="Password" className="form-control" onChange={this.handleChange} id="password" />
                   </div>
                   <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center"><input name type="checkbox" defaultValue /> <span className="pl-2 font-weight-bold">Remember Me</span></div>
@@ -32,11 +49,11 @@ class Login extends Component{
                 </form>
 
                 <div className="pt-4 text-center">
-                  <h6>Do not have an account? <a href="/user/signup/">Sign Up</a></h6>
+                  <h6>Do not have an account? <Link to="/user/signup/">Sign Up</Link></h6>
                 </div>
 
                 <div className="pt-4 text-center TLogin">
-                <h6>Login as a travel agency <a href="/travelAgency/tlogin/">TLogin</a></h6>
+                <h6>Login as a travel agency <Link to="/travelAgency/tlogin/">TLogin</Link></h6>
               </div>
             </div>
               </div>

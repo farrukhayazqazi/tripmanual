@@ -1,18 +1,19 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom';
 
-const NavBar = () =>{
+const NavBar = ({ isLogin, logout, name }) =>{
     return(
       
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className='container'>
-        <a className="navbar-brand" href="/">Trip Manual</a>
+        <NavLink className="navbar-brand" to="/">Trip Manual</NavLink>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+              <NavLink className="nav-link" to="/">Home <span className="sr-only"></span></NavLink>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">Link</a>
@@ -39,16 +40,33 @@ const NavBar = () =>{
           </form>
           
           </div>
-          <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <a className="nav-link" href="/user/login/">Login <span className="sr-only">(current)</span></a>
-          </li>
 
-          <li className="nav-item">
-          <a className="nav-link" href="/user/signup/">Signup<span className="sr-only">(current)</span></a>
+         { isLogin ? 
+          
+          <>
+          <ul className="navbar-nav mr-auto">
+          <li className="navbar-nav">
+            <a id="username">&nbsp;{name} |</a>
+            <a ><NavLink className="nav-link" onClick={() =>logout()} to="/user/login/">Logout </NavLink><span className="sr-only">(current)</span></a>
           </li>
           </ul>
+          </>
+          : 
+          
+          <>
+          <ul className="navbar-nav mr-auto">
+          <li className="nav-item">
+            <a className="nav-link"><NavLink className="nav-link" to="/user/login/">Login </NavLink><span className="sr-only">(current)</span></a>
+          </li>
 
+          <li className="nav-item">
+          <a className="nav-link"><NavLink className="nav-link" to="/user/signup/">Signup</NavLink><span className="sr-only">(current)</span></a>
+          </li>
+          </ul>
+          </> }
+
+
+          
         </div>
       </nav>
       
