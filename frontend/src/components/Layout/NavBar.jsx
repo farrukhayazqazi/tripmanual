@@ -41,7 +41,7 @@ const NavBar = ({ isLogin, logout, name }) =>{
           
           </div>
 
-         { isLogin ? 
+         { localStorage.getItem("token") ? 
           
           <>
           <ul className="navbar-nav mr-auto">

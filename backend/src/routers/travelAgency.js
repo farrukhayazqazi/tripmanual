@@ -14,6 +14,15 @@ router.get('/travelAgency/:id', (req, res) =>{
 
 router.post('/travelAgency/signup', async (req, res) =>{
 
+    const { email } = req.body;
+
+    const agencyAlreadyExisits = await User.findOne({ email })
+
+    if(agencyAlreadyExisits){
+        return res.send({ error: "User already exists!"})
+        
+    }
+
     const travelagency = TravelAgency(req.body)
 
     try{
@@ -28,7 +37,7 @@ router.post('/travelAgency/signup', async (req, res) =>{
 })
 
 
-router.post('/travelAgency/login', auth, async (req, res) =>{
+router.post('/travelAgency/login', async (req, res) =>{
     
 
     try{
@@ -37,7 +46,7 @@ router.post('/travelAgency/login', auth, async (req, res) =>{
         res.send({ travelagency, token })
     }
     catch(e){
-        res.status(404).send()
+        res.send({ error: "User does not exist!" })
     }
 })
 

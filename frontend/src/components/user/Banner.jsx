@@ -1,5 +1,6 @@
 import React from 'react'
 import Card from './Card'
+import { Link } from 'react-router-dom'
 
 
 const Banner = () =>{
@@ -13,10 +14,10 @@ const Banner = () =>{
             <div className="container h-100">
             <div className="d-flex justify-content-center h-100">
               
-            <form action="user/trip/anytripwhatsoever">
+            <form action="/user/tripListing">
               <div className="searchbar">
                 <input className="search_input" type="text" name placeholder="Search..." />
-                <a href="/trip/value" className="search_icon"><i className="fas fa-search" /></a>
+                <Link to='/user/tripListing' className="search_icon" ><a className="search_icon"><i className="fas fa-search" /></a></Link>
               </div>
             </form>
   

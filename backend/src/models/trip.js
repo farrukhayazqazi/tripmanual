@@ -14,6 +14,9 @@ const tripSchema = new mongoose.Schema({
     },
 
     // images:{},
+    images: {
+        type: Array
+    },
 
     description:{
         type: String,
@@ -70,6 +73,7 @@ const tripSchema = new mongoose.Schema({
 
     reviews:{
         type: String,
+        default: null
     },
 
     owner: {

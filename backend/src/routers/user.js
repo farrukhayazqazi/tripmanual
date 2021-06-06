@@ -15,7 +15,15 @@ router.get('/users/me', (req, res) =>{
 // register or signup a new user
 router.post('/users/signup', async (req, res) =>{
 
-    console.log(req.body)
+    const { email } = req.body;
+
+    const userAlreadyExisits = await User.findOne({ email })
+
+    if(userAlreadyExisits){
+        return res.send({ error: "User already exists!"})
+        
+    }
+    
     const user = new User(req.body)
 
     try{
@@ -31,8 +39,15 @@ router.post('/users/signup', async (req, res) =>{
 
 
 // to login 
-router.post('/users/login', auth, async (req, res) =>{
+router.post('/users/login', async (req, res) =>{
     
+    const { email } = req.body;
+
+    const user = await User.findOne({ email })
+
+    if(!user){
+        return res.send({ error: "Either password or email is incorrect!"})
+    }
 
     try{
         const user = await User.findByCredentials(req.body.email, req.body.password)
@@ -40,7 +55,7 @@ router.post('/users/login', auth, async (req, res) =>{
         res.send({ user, token })
     }
     catch(e){
-        res.status(404).send()
+        res.send({ error: "User does not exist!"})
     }
 })
 

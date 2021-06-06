@@ -7,10 +7,11 @@ class CreateTrip extends Component{
 
 
     state = {
-        NumOfDays : 1,
+        days : 1,
         itinerary : [],
         images: [],
         title: '',
+        description:'',
         included: [],
         seats: null,
         startingDateAndTime: { "date" : null, "time": null},
@@ -18,7 +19,18 @@ class CreateTrip extends Component{
 
     }
 
-    Check = () =>{
+    handleSubmit = (e) =>{
+        e.preventDefault();
+        let { days, itinerary, images, title, description, included, seats, startingDateAndTime, endingDateAndTime } = this.state;
+
+
+        if( days == 1 || itinerary.length !== days || images.length == 0 || title === '' || description === '' || included.length == 0  || seats == null || startingDateAndTime["date" && "time"] == null || endingDateAndTime["date" && "time"] ==  null ){
+
+            return alert("Please fill out all of the fields!")
+        }
+
+        this.props.createTrip(this.state);
+        console.log(this.props)
         console.log(this.state)
     }
 
@@ -78,27 +90,21 @@ class CreateTrip extends Component{
     }
 
 
-    handleSubmit = (e) =>{
-        e.preventDefault();
-    }
-
-
-
     handleClick = (e) =>{
         e.preventDefault();
         if(e.target.id === 'plus'){
-        this.setState({NumOfDays: this.state.NumOfDays + 1 })
+        this.setState({days: this.state.days + 1 })
         this.count++;
         
         }
         else if(e.target.id === 'minus'){
-           this.state.NumOfDays > 1 ? this.setState({NumOfDays: this.state.NumOfDays - 1 }) : alert("can't be less than that :)")
+           this.state.days > 1 ? this.setState({days: this.state.days - 1 }) : alert("can't be less than that :)")
             this.count--;
         }
     }
 
     itineraryCount = 1;
-    count = this.state.NumOfDays;
+    count = this.state.days;
 
     addItinerary = (e) =>{
         e.preventDefault();
@@ -110,7 +116,7 @@ class CreateTrip extends Component{
         this.setState({itinerary});
         // this.newText.type = 'hidden'
         // e.target.value = 'hidden'
-        // this.setState({ NumOfDays: this.state.NumOfDays - 1})
+        // this.setState({ days: this.state.days - 1})
         this.newText.placeholder = 'Day '+ this.itineraryCount;
         this.itineraryCount++;
     }
@@ -141,7 +147,7 @@ class CreateTrip extends Component{
             for(let d = this.count ; d > 0; d--){
               days.push(
                 <div className="input-group mb-3" onSubmit={this.addItinerary}>
-                    <input type="text" className="form-control" ref={(ip) => {this.newText = ip}} placeholder={`Day ${d}`} aria-label="Day 01" aria-describedby="basic-addon2" />
+                    <input required="true" type="text" className="form-control" ref={(ip) => {this.newText = ip}} placeholder={`Day ${d}`} aria-label="Day 01" aria-describedby="basic-addon2" />
                     <button className="btn btn-outline-secondary" onClick={this.addItinerary} type="button">+</button>
                 </div>
               );
@@ -160,7 +166,7 @@ class CreateTrip extends Component{
             
             <br/><br/>
             <div>
-            <h4>Trip Days:  &nbsp; <input  className="col-1" value={this.state.NumOfDays} disabled="true"/>                    
+            <h4>Trip Days:  &nbsp; <input  className="col-1" value={this.state.days} disabled="true"/>                    
             &nbsp; <a style={{cursor: `pointer`}} id="plus" className="fas fa-plus-circle" onClick={this.handleClick}></a>
             &nbsp; <a style={{cursor: `pointer`}} id="minus" className="fas fa-minus-circle" onClick={this.handleClick}></a>
             </h4>
@@ -169,10 +175,10 @@ class CreateTrip extends Component{
             <br/><br/><br/>
             </div>
 
-            <form>
+            <form onSubmit={this.handleSubmit} >
             <div className="input-group mb-3">
             <h4>Trip Title: &nbsp; &nbsp;</h4>
-            <input type="text" className="form-control" onChange={this.handleChange} id="title" placeholder='Trip Title' aria-label="Trip Title" aria-describedby="basic-addon2" />
+            <input type="text" required="true" className="form-control" onChange={this.handleChange} id="title" placeholder='Trip Title' aria-label="Trip Title" aria-describedby="basic-addon2" />
             </div>
             <br/><br/>
             <hr/>
@@ -186,7 +192,7 @@ class CreateTrip extends Component{
 
                   <div className="col-sm-9">
                     <span className="btn btn-default btn-file">
-                      <input id="images" onChange={this.setImages} name="input2[]"  type="file" className="file" multiple data-show-upload="true" data-show-caption="true" />
+                      <input id="images" required="true" onChange={this.setImages} name="input2[]"  type="file" className="file" multiple data-show-upload="true" data-show-caption="true" />
                     </span>
                     {this.state.images.map((item, index) => <img src={item} />)}
                   </div>
@@ -197,7 +203,7 @@ class CreateTrip extends Component{
                 <div className='create-title'>
                     <h5>Trip Description</h5><br/>
                     <div className="form-group">
-                    <textarea className="form-control" id="description" placeholder="write detailed description about the trip with timings..." id="exampleFormControlTextarea1" rows={3} defaultValue={""} />
+                    <textarea required="true" className="form-control" onChange={this.handleChange} id="description" placeholder="write detailed description about the trip with timings..." rows={3} defaultValue={""} />
                   </div>
                   </div>
                   <hr/>
@@ -215,10 +221,10 @@ class CreateTrip extends Component{
               
                <br/>
 
-                { this.state.NumOfDays == 1 ? (
+                { this.state.days == 1 ? (
                  
                     <div className="input-group mb-3" onSubmit={this.addItinerary}>
-                        <input type="text" className="form-control"  ref={(ip) => {this.newText = ip}} placeholder='Day 1' aria-label="Day 01" aria-describedby="basic-addon2" />
+                        <input required="true" type="text" className="form-control"  ref={(ip) => {this.newText = ip}} placeholder='Day 1' aria-label="Day 01" aria-describedby="basic-addon2" />
                         <button className="btn btn-outline-secondary" onClick={this.addItinerary} type="button">+</button>
                     </div>
 
@@ -286,21 +292,21 @@ class CreateTrip extends Component{
             <hr/>
                 
             <div className="create-title">
-                <h5>Available Seats &nbsp; &nbsp;<input max='30' onChange={this.handleChange} id="seats" className="col-1" type="number" min='1' defaultValue='1' /></h5>
+                <h5>Available Seats &nbsp; &nbsp;<input required="true" max='30' onChange={this.handleChange} id="seats" className="col-1" type="number" min='1' defaultValue='1' /></h5>
             </div>
             <hr/>
 
             <div className="create-title">
                 <h5>Date and Time</h5><br/><br/>
-                Start at :&nbsp;<input type='date' onChange={this.handleDateAndTime} id="startingDate"  />&nbsp;&nbsp; at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="startingTime"/> <br/><br/>
-                Ends at :&nbsp;<input type='date' onChange={this.handleDateAndTime} id="endingDate" />&nbsp;&nbsp;at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="endingTime"/>
+                Start at :&nbsp;<input type='date' required="true" onChange={this.handleDateAndTime} id="startingDate"  />&nbsp;&nbsp; at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="startingTime"/> <br/><br/>
+                Ends at :&nbsp;<input type='date' required="true" onChange={this.handleDateAndTime} id="endingDate" />&nbsp;&nbsp;at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="endingTime"/>
             </div>
             
 
             <br/><br/><br/>
             <input style={{marginLeft:'300px'}} className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" /> 
             <p style={{ fontSize: '15px' }}>Make sure you have agreed to all the terms & conditions of tripmanual</p>
-            <button type="button" onClick={this.Check} class="btn btn-secondary btn-lg btn-block">Create Trip</button>
+            <button type="button" onClick={this.handleSubmit} class="btn btn-secondary btn-lg btn-block">Create Trip</button>
 
           </form>
 
