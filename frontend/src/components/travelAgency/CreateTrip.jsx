@@ -24,14 +24,15 @@ class CreateTrip extends Component{
         let { days, itinerary, images, title, description, included, seats, startingDateAndTime, endingDateAndTime } = this.state;
 
 
-        if( days == 1 || itinerary.length !== days || images.length == 0 || title === '' || description === '' || included.length == 0  || seats == null || startingDateAndTime["date" && "time"] == null || endingDateAndTime["date" && "time"] ==  null ){
+        if( days == 0 || itinerary.length !== days || images.length == 0 || title === '' || description === '' || seats == null || startingDateAndTime["date" && "time"] == null || endingDateAndTime["date" && "time"] ==  null ){
 
             return alert("Please fill out all of the fields!")
         }
 
         this.props.createTrip(this.state);
         console.log(this.props)
-        console.log(this.state)
+        console.log("state has startingDataAndTime:  ",this.state)
+        this.props.history.push("/travelAgency/dashboard")
     }
 
     handleChange = (e) =>{
@@ -157,7 +158,11 @@ class CreateTrip extends Component{
             }
 
 
-
+        // To Delete uploaded trip pictures
+        const handleDelete = (image) =>{
+            let images = this.state.images.filter(item => item !== image);
+            this.setState({...this.state, images })
+        }
 
     return(
         <div className='container create-trip'>
@@ -194,8 +199,17 @@ class CreateTrip extends Component{
                     <span className="btn btn-default btn-file">
                       <input id="images" required="true" onChange={this.setImages} name="input2[]"  type="file" className="file" multiple data-show-upload="true" data-show-caption="true" />
                     </span>
-                    {this.state.images.map((item, index) => <img src={item} />)}
-                  </div>
+
+                    <div className="row">
+                        {this.state.images.map((item, index) => (    
+                                    <div className="trip-images">
+                                        <i onClick={() => handleDelete(item)} class="fas fa-times-circle trash"></i>
+                                        <img src={item} />
+                                    </div>
+                            ))}
+                    </div>
+
+                </div>
                     
                 <br/>
                 <hr/>

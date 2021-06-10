@@ -23,6 +23,7 @@ import UserAuthCheck from './components/UserAuthCheck';
 import UserSignupCheck from './components/UserSignupCheck';
 import TravelAgencyAuthCheck from './components/TravelAgencyAuthCheck';
 import TravelAgencySignupCheck from './components/TravelAgencySignupCheck';
+import ViewTrip from './components/travelAgency/ViewTrip';
 
 
 class App extends Component {
@@ -31,9 +32,42 @@ class App extends Component {
     userAuthenticated: false,
     travelAgencyAuthenticated: false,
     name: [],
-    errors: []
+    errors: [],
+    trips: []
+  }
+//////////////////////////
+componentDidMount = async () =>{
+
+  const token = localStorage.getItem("token");
+
+  try{
+    if(token){
+      const response = await axios.get("http://localhost:5000/travelAgency/authenticated", { headers: { "Authorization": `Bearer ${token}` } });
+      
+          if(response.data == "travel agency not found!"){
+               const res = await axios.get("http://localhost:5000/user/authenticated", { headers: { "Authorization": `Bearer ${token}` } });
+               
+            if(res.data){
+              return this.setState({ userAuthenticated: true, name: res.data })
+            }
+            else{
+              this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false, name: res.data })
+            }
+            
+          }
+          else{
+            return this.setState({ travelAgencyAuthenticated: true, name: response.data });
+          }
+        }
+
+  }
+  catch(e){
+    console.log(e)
   }
 
+}
+
+/////////////////////////
   authenticationCheck = (token) =>{
     if(!token){
       return <Redirect to='/user/login' />
@@ -195,17 +229,45 @@ const createTrip = async (trip) =>{
               itinerary: trip.itinerary,
               included: trip.included,
               seats: trip.seats,
-              startingDataAndTime: trip.startingDataAndTime,
+              startingDateAndTime: trip.startingDateAndTime,
               endingDateAndTime: trip.endingDateAndTime
             }, {
               headers: { "Authorization": `Bearer ${token}` }
             })
 
             console.log("response.data of trip from backend: ", response.data)
+
+            try{
+              if(response.data){
+                let trips = [...this.state.trips, response.data]
+                this.setState({ trips })
+              }
+            }
+            catch(e){
+              console.log("Unable to create trip!",e);
+            }
 }
 
+// TO RETRIEVE ALL THE TRIPS FOR A TRAVEL AGENCY
+// const getTrips = () =>{
+//   let token = localStorage.getItem("token");
+
+//   const response = await axios.get(`${BASIC_URL}/trips/all`, { headers: { "Authorization": `Bearer ${token}` } });
+
+//   console.log("response.data in getTrips: ",response.data)
+  // try{
+
+  // }
+  // catch(e){
+
+  // }
+
+// }
 
 
+const mapTripsToState = (trips) =>{
+  this.setState({trips});
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // <Route path='/user/trip/:id' render={(props) => <TripDetails {...props} /> } />
@@ -228,9 +290,9 @@ const createTrip = async (trip) =>{
   return (
     <BrowserRouter>
     <div className="App">
-    <NavBar isLogin={this.state.isLogin} logout={logout} name={this.state.name} />
+    <NavBar userAuthenticated={this.state.userAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} />
     <Route exact path='/' render={(props) => <Banner {...props} /> } />
-    <Route path='/user/tripListing' render={(props) => <TripListing {...props} /> } />
+    <Route path='/user/tripListing/:id' render={(props) => <TripListing {...props} /> } />
     {/*User Routes*/}
     <UserGuardedRoute path='/user/trip/:id'  component={TripDetails} auth={this.state.userAuthenticated} />
     <UserGuardedRoute path='/user/BookingDetails/:id' component={BookingDetails} auth={this.state.userAuthenticated} /> 
@@ -238,8 +300,9 @@ const createTrip = async (trip) =>{
     <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.userAuthenticated} />
     
     {/*Travel Agency Routes*/}
-    <TravelAgencyGuardedRoute exact path='/travelAgency/dashboard'    component={Dashboard} auth={this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/dashboard'    component={Dashboard} mapTripsToState={mapTripsToState} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
     <TravelAgencyGuardedRoute exact path='/travelAgency/createtrip' component={CreateTrip} createTrip={createTrip} auth={this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/trip/:id'    component={ViewTrip}  tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
     <TravelAgencyAuthCheck path='/travelAgency/tlogin/' component={TLogin} tAuthenticate={tAuthenticate}  auth={this.state.travelAgencyAuthenticated} />
     <TravelAgencySignupCheck path='/travelAgency/tsignup/' component={TSignup} tsignUp={tsignUp} auth={this.state.travelAgencyAuthenticated} />
 

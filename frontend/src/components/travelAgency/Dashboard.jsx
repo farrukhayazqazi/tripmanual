@@ -4,8 +4,35 @@ import create from '../assets/images/create.jpg';
 import update from '../assets/images/update.jpg';
 import deletee from '../assets/images/deletee.jpg';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class Dashboard extends Component {
+
+  // state = {
+  //   trips: []
+  // }
+
+  async componentDidMount(){
+      let BASIC_URL = "http://localhost:5000";
+      const token = localStorage.getItem("token");
+
+      if(token){
+        try{
+          const response = await axios.get(`${BASIC_URL}/trip/all`, { headers: { "Authorization": `Bearer ${token}` } });
+          console.log("Trips are retrieved: ",response.data);
+          const trips = response.data
+          // this.setState({trips})
+          this.props.mapTripsToState(trips);
+        }
+        catch(e){
+          console.log("Unable to retrieve trips!")
+        }
+      }
+
+
+  }
+
+
     
     render(){
     return (
@@ -57,38 +84,28 @@ class Dashboard extends Component {
       <br/>
       <div className="row dashboard-card">
         
-        <div className="col">
-          <div className="card" style={{width: '20rem'}}>
-          <img className="card-img-top" src="..." alt="Card image cap" />
-          <div className="card-body">
-            <h5 className="card-title">Card title</h5>
-            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <Link to="#" className="btn btn-primary">Go somewhere</Link>
-          </div>
-        </div>
-      </div>
 
-      <div className="col">
-        <div className="card" style={{width: '20rem'}}>
-        <img className="card-img-top" src="..." alt="Card image cap" />
-        <div className="card-body">
-          <h5 className="card-title">Card title</h5>
-          <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <Link to="#" className="btn btn-primary">Go somewhere</Link>
-        </div>
-      </div>
-    </div>
 
-    <div className="col">
-    <div className="card" style={{width: '20rem'}}>
-    <img className="card-img-top" src="..." alt="Card image cap" />
-    <div className="card-body">
-      <h5 className="card-title">Card title</h5>
-      <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <Link to="#" className="btn btn-primary">Go somewhere</Link>
-    </div>
-  </div>
-</div>
+        { this.props.trips.length > 0 
+              ?
+              this.props.trips.map(trip => (
+                <div className="trip-card" key={trip._id}>
+                <div className="card" style={{width: '15rem'}}>
+                <img className="card-img-top img-thumbnail" src={trip.images[0]} alt="Card image cap" />
+                <div className="card-body">
+                  <Link className="card-title trip-card-title" to={`/travelAgency/trip/${trip._id}`} ><b>{trip.title}</b></Link>
+                </div>
+              </div>
+              </div>
+              ) ) 
+
+              : 
+              <p>No trip available :)</p>
+            
+        }
+
+
+
 
         
 

@@ -1,43 +1,35 @@
 import {Component} from 'react';
 import { Redirect } from 'react-router-dom';
-import Review from './Review.jsx';
-import axios from 'axios';
 
 
-class TripDetails extends Component{
+class ViewTrip extends Component{
 
   state = {
-    trip: null
+    id: null,
+    trip: [] 
   }
 
-  
 
   async componentDidMount(){
-    const token = localStorage.getItem("token");
-    const response = await axios.get(`http://localhost:5000/trip/${this.props.match.params.id}`, { headers: { "Authorization": `Bearer ${token}` } });
-    try{
-      if(response.data){
-        this.setState({trip: response.data});
-        console.log("Trip Details state: ",this.state.trip)
-      }
+      let tripId = this.props.match.params.id;
+      const trip = this.props.trips.filter(trip => trip._id == tripId)
+        this.setState({ trip })
     }
-    catch(e){
-      console.log(e)   
-     }
-  }
 
   handleClick = (e) =>{
     e.preventDefault();
-    this.props.history.push(`/user/BookingDetails/${this.props.match.params.id}`);
+    this.props.history.push(`/user/BookingDetails/${this.state.id}`);
   }
 
     render(){
     return(
+        
+        
         <div className="container">
         <br/><br/><br/>
-        {this.state.trip ? (<>
-
-        <h2>{this.state.trip.title}</h2>
+        {this.state.trip.length > 0 ? (<> 
+            {this.state.trip.map(trip => (<> 
+        <h2>{trip.title}</h2>
         <br/>
       <div className="row">
         <div className="col-8">
@@ -46,14 +38,23 @@ class TripDetails extends Component{
           <li data-target="#carouselExampleIndicators" data-slide-to={0} className="active" />
           <li data-target="#carouselExampleIndicators" data-slide-to={1} />
           <li data-target="#carouselExampleIndicators" data-slide-to={2} />
+          <li data-target="#carouselExampleIndicators" data-slide-to={3} />
+          <li data-target="#carouselExampleIndicators" data-slide-to={4} />
         </ol>
-        <div className="carousel-inner">
-        {this.state.trip.images.map((image, index) => (
-        <div className={`carousel-item ${index == 0 ? "active" : ""}`} key={index}>
-            <img className="d-block w-100" src={image} alt="First slide" />
-        </div>
-        ))}
-        </div>
+
+
+                <div className="carousel-inner">
+                
+
+                {trip.images.map((image, index) => (
+                <div className={`carousel-item ${index == 0 ? "active" : ""}`} key={index}>
+                    <img className="d-block w-100" src={image} alt="First slide" />
+                </div>
+                ))}
+                </div>
+                
+
+
         <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
           <span className="carousel-control-prev-icon" aria-hidden="true" />
           <span className="sr-only">Previous</span>
@@ -75,14 +76,12 @@ class TripDetails extends Component{
           Trip Manual
         </div>
         <div className="card-body">
-        <h6>Tour Operator: <b> {this.state.trip.owner.name}</b></h6><br/>
-        <h6>Available Seats: <b>{this.state.trip.seats}</b></h6><br/>
-        <h6>Days: <b>{this.state.trip.days}</b></h6><br/>
-        <h6>Departure from: <b>Lahore</b></h6><br/>
-        <h6>Starting Date and Time: <b>{this.state.trip.startingDateAndTime[0].date}|&nbsp;{this.state.trip.startingDateAndTime[0].time}</b></h6><br/>
-        <h6>Ending Date and Time: <b>{this.state.trip.endingDateAndTime[0].date}|&nbsp;{this.state.trip.endingDateAndTime[0].time}</b></h6>
-          <br/>
-          <a href="#" onClick={this.handleClick} className="btn btn-dark btn-lg btn-block">Book Now</a>
+          <h6>Tour Operator: <b> {this.props.tripOperator}</b></h6><br/>
+          <h6>Available Seats: <b>{trip.seats}</b></h6><br/>
+          <h6>Days: <b>{trip.days}</b></h6><br/>
+          <h6>Departure from: <b>Lahore</b></h6><br/>
+          <h6>Starting Date and Time: <b>{trip.startingDateAndTime[0].date}|&nbsp;{trip.startingDateAndTime[0].time}</b></h6><br/>
+          <h6>Ending Date and Time: <b>{trip.endingDateAndTime[0].date}|&nbsp;{trip.endingDateAndTime[0].time}</b></h6>
         </div>
         <div className="card-footer text-muted">
         
@@ -104,7 +103,7 @@ class TripDetails extends Component{
           </div>
           <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
             <div className="card-body">
-              {this.state.trip.description}
+              {trip.description}
             </div>
           </div>
         </div>
@@ -118,11 +117,11 @@ class TripDetails extends Component{
           </div>
           <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
             <div className="card-body">
-            {this.state.trip.included.map(item => (
-              <div>
-              <li>{item}</li>
-              </div>
-         ))} 
+             {trip.included.map(item => (
+                 <div>
+                 <li>{item}</li>
+                 </div>
+            ))} 
             </div>
           </div>
         </div>
@@ -136,9 +135,9 @@ class TripDetails extends Component{
           </div>
           <div id="collapseThree" className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
             <div className="card-body">
-            <h6>Starting Date and Time: <b>{this.state.trip.startingDateAndTime[0].date}|&nbsp;{this.state.trip.startingDateAndTime[0].time}</b></h6>
-            <h6>Ending Date and Time: <b>{this.state.trip.endingDateAndTime[0].date}|&nbsp;{this.state.trip.endingDateAndTime[0].time}</b></h6>
- 
+            <h6>Starting Date and Time: <b>{trip.startingDateAndTime[0].date}|&nbsp;{trip.startingDateAndTime[0].time}</b></h6>
+            <h6>Ending Date and Time: <b>{trip.endingDateAndTime[0].date}|&nbsp;{trip.endingDateAndTime[0].time}</b></h6>
+  
             </div>
           </div>
         </div>
@@ -191,10 +190,10 @@ class TripDetails extends Component{
 
       </div>
         <br/> <br/>
-        <Review/>
-        </>) : null}
+        </>))}
+        </>) : null }
         </div>
         )}
 }
 
-export default TripDetails;
+export default ViewTrip;

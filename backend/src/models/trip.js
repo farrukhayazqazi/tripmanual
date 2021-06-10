@@ -15,7 +15,8 @@ const tripSchema = new mongoose.Schema({
 
     // images:{},
     images: {
-        type: Array
+        type: Array,
+        required: true
     },
 
     description:{
@@ -41,6 +42,18 @@ const tripSchema = new mongoose.Schema({
         default: 1
     },
 
+    startingDateAndTime: [{
+        date: {
+            type: String,
+            required: true
+        },
+
+        time:{
+            type: String,
+            required: true 
+        }
+    }],
+
     endingDateAndTime: [{
         date: {
             type: String,
@@ -53,17 +66,7 @@ const tripSchema = new mongoose.Schema({
         }
     }],
 
-    startingDateAndTime: [{
-        date: {
-            type: String,
-            required: true
-        },
 
-        time:{
-            type: String,
-            required: true 
-        }
-    }],
     
     //completed? : boolean true or false (when the trip is over)
     completed: {

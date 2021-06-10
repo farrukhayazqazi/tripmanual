@@ -3,14 +3,11 @@ const express = require('express')
 const router = new express.Router()
 const TravelAgency = require('../models/travelAgency');
 const User = require('../models/user');
-const auth = require('../middleware/auth')
+const auth = require('../middleware/auth');
+const { findOne } = require('../models/user');
 
 
 
-
-router.get('/travelAgency/:id', (req, res) =>{
-    res.send('HI WE ARE '+req.params.id+' TOUR OPERATORS')
-})
 
 router.post('/travelAgency/signup', async (req, res) =>{
 
@@ -64,6 +61,18 @@ router.post('/travelAgency/logout', auth, async(req, res) =>{
     catch(e){
 
         res.status(500).send()
+    }
+})
+
+// Check route
+
+router.get("/travelAgency/authenticated", auth , (req, res) =>{
+    try{
+      
+        res.send(req.travelagency.name);
+    }
+    catch(e){
+        res.send("travel agency not found!")
     }
 })
 

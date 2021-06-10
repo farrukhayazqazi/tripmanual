@@ -77,15 +77,16 @@ router.post('/users/logout', auth, async(req, res) =>{
     }
 })
 
+// Check route
 
-
-
-
-
-
-
-
-
+router.get("/user/authenticated", auth , (req, res) =>{
+    try{
+        res.send(req.user.firstName);
+    }
+    catch(e){
+        res.send(e)
+    }
+})
 
 
 module.exports = router

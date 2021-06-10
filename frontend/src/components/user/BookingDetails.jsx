@@ -1,12 +1,34 @@
 import React from 'react'
 import { Component } from 'react';
+import axios from 'axios';
 
 
 class BookingDetails extends Component{
 
     state = {
-        NumOfTravelers : 1
+        NumOfTravelers : 1,
+        trip: null
     }
+
+
+    async componentDidMount(){
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`http://localhost:5000/trip/${this.props.match.params.id}`, { headers: { "Authorization": `Bearer ${token}` } });
+      try{
+        if(response.data){
+          this.setState({trip: response.data});
+          console.log("Booking Details state: ",this.state.trip)
+        }
+      }
+      catch(e){
+        console.log(e)   
+       }
+    }
+
+
+
+
+
 
     handleClick = (e) =>{
         e.preventDefault();
@@ -87,11 +109,11 @@ class BookingDetails extends Component{
                 <div className="card">
                 <div className="card-horizontal">
                     <div className="img-square-wrapper">
-                    <img className src="https://storage.googleapis.com/wzukusers/user-18718137/images/5a614fd1db303ife9Ait/amazing-736885.png" alt="Card image cap" />
+                    <img className src={this.state.trip.images[0]} alt="Card image cap" />
                     </div>
                     <div className="card-body">
-                    <h4 className="card-title">Card title</h4>
-                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <h4 className="card-title">{this.state.trip.title}</h4>
+                    <p className="card-text">{this.state.trip.description.slice(0,150)+"..."}</p>
                     </div>
                     </div>
                     
