@@ -58,6 +58,13 @@ const userSchema = new mongoose.Schema({
 
 })
 
+// virtual property set up to make the relationship b/w user and bookings.
+userSchema.virtual('bookings',{
+    ref: "Booking",
+    localField: '_id',
+    foreignField: 'user'
+})
+
 
 // only returning non-confidential data back into JSON
 userSchema.methods.toJSON = function() {

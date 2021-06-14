@@ -86,8 +86,15 @@ const tripSchema = new mongoose.Schema({
     }
 })
 
-// if the trip tenure is completed 
+// virtual property set up to make the relationship b/w trip and bookings.
+tripSchema.virtual('bookings',{
+    ref: "Booking",
+    localField: '_id',
+    foreignField: 'trip'
+})
 
+
+// if the trip tenure is completed 
 tripSchema.methods.isCompleted = () =>{
     const trip = this
 

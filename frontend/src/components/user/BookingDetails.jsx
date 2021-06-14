@@ -6,14 +6,16 @@ import axios from 'axios';
 class BookingDetails extends Component{
 
     state = {
-        NumOfTravelers : 1,
-        trip: null
+        NumOfTravellers : 1,
+        travelersDetail: [{ firstName: '', lastName: '', address: '', city: '', address: '', phoneNumber: '', city: '', state: '', zip: ''}],        
+        trip: null,
     }
 
 
-    async componentDidMount(){
+    componentDidMount = async () =>{
       const token = localStorage.getItem("token");
       const response = await axios.get(`http://localhost:5000/trip/${this.props.match.params.id}`, { headers: { "Authorization": `Bearer ${token}` } });
+      console.log(this.state.travelersDetail)
       try{
         if(response.data){
           this.setState({trip: response.data});
@@ -26,75 +28,99 @@ class BookingDetails extends Component{
     }
 
 
+    //handle traveller detail changes
+    handleTDChange(e, index, updateField) {
+      const travelersDetail = [...this.state.travelersDetail];
+      travelersDetail[index][updateField] = e.target.value;
+      this.setState({ travelersDetail });
+  }
 
-
-
-
-    handleClick = (e) =>{
-        e.preventDefault();
-        if(e.target.id == 'plus'){
-        this.setState({NumOfTravelers: this.state.NumOfTravelers + 1 })
-        
-        }
-        else if(e.target.id == 'minus'){
-           this.state.NumOfTravelers > 1 ? this.setState({NumOfTravelers: this.state.NumOfTravelers - 1 }) : alert("can't be less than that :)")
-        }
+    // check
+    check = (e) =>{
+      e.preventDefault();
+      console.log("state travellers detail: ",this.state.travelersDetail)
     }
+
+    // To increase or decrease the number of travelers
+    handleClick = (e) => {
+      e.preventDefault();
+      const travelersDetailCopy = [...this.state.travelersDetail];
+      if (e.target.id == 'plus') {
+          travelersDetailCopy.push({
+              firstName: '', lastName: '', address: '', city: '', address: '', phoneNumber: '', city: '', state: '', zip: '' // Add empty data
+          });
+      } else if (e.target.id == 'minus') {
+          if (this.state.travelersDetail.length === 1) {
+              alert("Can't be less than 1");
+          } else {
+              travelersDetailCopy.pop();
+          }
+      }
+      this.setState({
+          travelersDetail: travelersDetailCopy
+      });
+  }
+
 
 
 
     render(){
 
-      const numberOfTravelers = () =>{
-        var travellors = [];
-        
-        
-        for(let t = 0; t < this.state.NumOfTravelers; t++){
-          travellors.push(
-            <div >
-            <h4> Traveller # {t+1} Details</h4><br/>
-            
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label htmlFor="inputFirstName4">First Name</label>
-                <input type="FirstName" className="form-control" id="inputFirstName4" placeholder="FirstName" />
+
+const numberOfTravelers = () => {
+  return this.state.travelersDetail.map((travelerDetail, index) => {
+      return (
+          <div key={index}>
+              <div>{ this.state.travelersDetail.length == 1 ? <h4>Traveller Details</h4> : <h4>Traveller # {index + 1} Details </h4> }</div> <br />
+
+              <div className="form-row">
+                  <div className="form-group col-md-6">
+                      <label htmlFor="firstName">First Name</label>
+                      <input type="firstName" className="form-control" onChange={(event) => {this.handleTDChange(event, index, "firstName")}} id="firstName" placeholder="FirstName" />
+                  </div>
+                  <div className="form-group col-md-6">
+                      <label htmlFor="lastName">Last Name</label>
+                      <input type="lastName" className="form-control" onChange={(event) => {this.handleTDChange(event, index, "lastName")}} id="lastName" placeholder="LastName" />
+                  </div>
               </div>
-              <div className="form-group col-md-6">
-                <label htmlFor="inputLastName4">Last Name</label>
-                <input type="LastName" className="form-control" id="inputLastName4" placeholder="LastName" />
+              <div className="form-group">
+                  <label htmlFor="address">Address</label>
+                  <input type="text" className="form-control" onChange={(event) => {this.handleTDChange(event, index, "address")}} id="address" placeholder="1234 Main St" />
               </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputAddress">Address</label>
-              <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputAddress2">Address 2</label>
-              <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label htmlFor="inputCity">City</label>
-                <input type="text" className="form-control" id="inputCity" />
+              <div className="form-group">
+                  <label htmlFor="phoneNumber">Phone Number</label>
+                  <input type="tel" className="form-control" onChange={(event) => {this.handleTDChange(event, index, "phoneNumber")}} id="phoneNumber" placeholder="+92..." />
               </div>
-              <div className="form-group col-md-4">
-                <label htmlFor="inputState">State</label>
-                <select id="inputState" className="form-control">
-                  <option selected>Choose...</option>
-                  <option>...</option>
-                </select>
+              <div className="form-row">
+                  <div className="form-group col-md-6">
+                      <label htmlFor="city">City</label>
+                      <select onChange={(event) => {this.handleTDChange(event, index, "city")}} id="city" className="form-control">
+                          <option selected>Choose...</option>
+                          <option>Lahore</option>
+                          <option>Islamabad</option>
+                          <option>Karachi</option>
+                          <option>Rawalpindi</option>
+                          <option>Quetta</option>
+                          <option>Multan</option>
+                      </select>
+                  </div>
+                  <div className="form-group col-md-4">
+                      <label htmlFor="state">State</label>
+                      <select onChange={(event) => {this.handleTDChange(event, index, "state")}} id="state" className="form-control">
+                          <option selected>Choose...</option>
+                          <option>Pakistan</option>
+                      </select>
+                  </div>
+                  <div className="form-group col-md-2">
+                      <label htmlFor="zip">Zip</label>
+                      <input type="text" className="form-control" onChange={(event) => {this.handleTDChange(event, index, "zip")}} id="zip" />
+                  </div>
               </div>
-              <div className="form-group col-md-2">
-                <label htmlFor="inputZip">Zip</label>
-                <input type="text" className="form-control" id="inputZip" />
-              </div>
-            </div>
-            </div>);
-          
-        }
-      return travellors
-        
-      }
+              <br/><br/>
+          </div>
+      )
+  })
+}
 
 
     return(
@@ -106,6 +132,7 @@ class BookingDetails extends Component{
         <br/> <br/> <br/>
             <div className="row">
             <div className="col-8">
+                {this.state.trip ? (
                 <div className="card">
                 <div className="card-horizontal">
                     <div className="img-square-wrapper">
@@ -115,16 +142,13 @@ class BookingDetails extends Component{
                     <h4 className="card-title">{this.state.trip.title}</h4>
                     <p className="card-text">{this.state.trip.description.slice(0,150)+"..."}</p>
                     </div>
+                    </div>     
                     </div>
-                    
-                    
-                    
-                    
-                    </div>
-
+                    ) : null }
                     <div>
+                    
                     <br/> <br/>
-                    <h4>Number of travelers:  &nbsp; <input  className="col-1" value={this.state.NumOfTravelers} disabled="true"/>                    
+                    <h4>Number of travelers:  &nbsp; <input  className="col-1" value={this.state.travelersDetail.length} disabled="true"/>                    
                     &nbsp; <a style={{cursor: `pointer`}} id="plus" className="fas fa-plus-circle" onClick={this.handleClick}></a>
                     &nbsp; <a style={{cursor: `pointer`}} id="minus" className="fas fa-minus-circle" onClick={this.handleClick}></a>
                     </h4>
@@ -132,69 +156,12 @@ class BookingDetails extends Component{
 
                     <br/>
         <hr/><br/>
+
+
         <form>
-
-        
-
-        { this.state.NumOfTravelers == 1 ? (
-          
-          <div>
-          <h4> Traveller Details</h4><br/>
-        
-          <div className="form-row">
-            <div className="form-group col-md-6">
-              <label htmlFor="inputFirstName4">First Name</label>
-              <input type="FirstName" className="form-control" id="inputFirstName4" placeholder="FirstName" />
-            </div>
-            <div className="form-group col-md-6">
-              <label htmlFor="inputLastName4">Last Name</label>
-              <input type="LastName" className="form-control" id="inputLastName4" placeholder="LastName" />
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="inputAddress">Address</label>
-            <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="inputAddress2">Address 2</label>
-            <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
-          </div>
-          <div className="form-row">
-            <div className="form-group col-md-6">
-              <label htmlFor="inputCity">City</label>
-              <input type="text" className="form-control" id="inputCity" />
-            </div>
-            <div className="form-group col-md-4">
-              <label htmlFor="inputState">State</label>
-              <select id="inputState" className="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
-              </select>
-            </div>
-            <div className="form-group col-md-2">
-              <label htmlFor="inputZip">Zip</label>
-              <input type="text" className="form-control" id="inputZip" />
-            </div>
-          </div>    
-          </div>
-        ): numberOfTravelers()
-          }
-
-       
-
-
-        <div className="form-group">
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" id="gridCheck" />
-            <label className="form-check-label" htmlFor="gridCheck">
-              Check me out
-            </label>
-          </div>
-        </div>
-        <button type="submit" className="btn btn-primary">Sign in</button>
+        { this.state.travelersDetail.length >= 1 ? numberOfTravelers() : null }
         <br/><br/>
         <hr/>
-
         <h4>Payment Details</h4><br/>
         <div className="form-row">
           <div className="form-group col-md-6">
@@ -211,8 +178,8 @@ class BookingDetails extends Component{
           <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
         </div>
         <div className="form-group">
-          <label htmlFor="inputAddress2">Address 2</label>
-          <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
+          <label htmlFor="inputPhoneNumber">Phone number</label>
+          <input type="text" className="form-control" id="phoneNumber" placeholder="Apartment, studio, or floor" />
         </div>
         <div className="form-row">
           <div className="form-group col-md-6">
@@ -220,8 +187,8 @@ class BookingDetails extends Component{
             <input type="text" className="form-control" id="inputCity" />
           </div>
           <div className="form-group col-md-4">
-            <label htmlFor="inputState">State</label>
-            <select id="inputState" className="form-control">
+            <label htmlFor="state">State</label>
+            <select id="state" className="form-control">
               <option selected>Choose...</option>
               <option>...</option>
             </select>
@@ -240,17 +207,13 @@ class BookingDetails extends Component{
           </div>
         </div>
         <button type="submit" className="btn btn-primary">Sign in</button>
-        <br/><br/>
-        <hr/>
+        <br/><br/><br/>
+        <input style={{marginLeft:'100px'}} className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" /> 
+        <p style={{ fontSize: '15px' }}>Make sure you have agreed to all the terms & conditions of tripmanual</p>
+        <button type="button" onClick={this.check}  class="btn btn-secondary btn-lg btn-block">Book Trip</button>
       </form>
-
-                <div className="col-4">
-
-                </div>
-            </div>
-
-
-            </div>
+      </div>
+      </div>
         </div>
         </div>
         )
