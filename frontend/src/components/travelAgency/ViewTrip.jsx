@@ -1,5 +1,5 @@
 import {Component} from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 
 class ViewTrip extends Component{
@@ -26,7 +26,16 @@ class ViewTrip extends Component{
         
         
         <div className="container">
-        <br/><br/><br/>
+        
+        <br/><br/>
+
+        <div aria-label="breadcrumb">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item"><Link to="/travelAgency/dashboard">Dashboard</Link></li>
+          <li className="breadcrumb-item active" aria-current="page">{this.state.trip.map(trip =>trip.title)}</li>
+        </ol>      
+        </div>
+        <br/>
         {this.state.trip.length > 0 ? (<> 
             {this.state.trip.map(trip => (<> 
         <h2>{trip.title}</h2>
@@ -79,9 +88,10 @@ class ViewTrip extends Component{
           <h6>Tour Operator: <b> {this.props.tripOperator}</b></h6><br/>
           <h6>Available Seats: <b>{trip.seats}</b></h6><br/>
           <h6>Days: <b>{trip.days}</b></h6><br/>
-          <h6>Departure from: <b>Lahore</b></h6><br/>
+          <h6>Departure from: <b>{trip.city}</b></h6><br/>
           <h6>Starting Date and Time: <b>{trip.startingDateAndTime[0].date}|&nbsp;{trip.startingDateAndTime[0].time}</b></h6><br/>
-          <h6>Ending Date and Time: <b>{trip.endingDateAndTime[0].date}|&nbsp;{trip.endingDateAndTime[0].time}</b></h6>
+          <h6>Ending Date and Time: <b>{trip.endingDateAndTime[0].date}|&nbsp;{trip.endingDateAndTime[0].time}</b></h6><br/>
+          <p>price per traveler: <h5><b>{trip.price}&nbsp;PKR</b></h5></p>
         </div>
         <div className="card-footer text-muted">
         

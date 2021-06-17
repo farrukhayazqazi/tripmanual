@@ -21,8 +21,12 @@ const bookingSchema = new mongoose.Schema({
         required: true
     },
 
+    trip_details:{
+        type: Array,
+        required: true
+    },
 
-    traveller_details: {
+    traveler_details: {
         type: Array,
         required: true
     },

@@ -78,10 +78,11 @@ class TripDetails extends Component{
         <h6>Tour Operator: <b> {this.state.trip.owner.name}</b></h6><br/>
         <h6>Available Seats: <b>{this.state.trip.seats}</b></h6><br/>
         <h6>Days: <b>{this.state.trip.days}</b></h6><br/>
-        <h6>Departure from: <b>Lahore</b></h6><br/>
+        <h6>Departure from: <b>{this.state.trip.city}</b></h6><br/>
         <h6>Starting Date and Time: <b>{this.state.trip.startingDateAndTime[0].date}|&nbsp;{this.state.trip.startingDateAndTime[0].time}</b></h6><br/>
-        <h6>Ending Date and Time: <b>{this.state.trip.endingDateAndTime[0].date}|&nbsp;{this.state.trip.endingDateAndTime[0].time}</b></h6>
-          <br/>
+        <h6>Ending Date and Time: <b>{this.state.trip.endingDateAndTime[0].date}|&nbsp;{this.state.trip.endingDateAndTime[0].time}</b></h6><br/>
+        <p>price per traveler: <h5><b>{this.state.trip.price}&nbsp;PKR</b></h5></p> 
+        <br/>
           <a href="#" onClick={this.handleClick} className="btn btn-dark btn-lg btn-block">Book Now</a>
         </div>
         <div className="card-footer text-muted">

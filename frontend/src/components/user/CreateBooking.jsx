@@ -3,14 +3,41 @@ import { Component } from 'react';
 import axios from 'axios';
 
 
-class BookingDetails extends Component{
+class CreateBooking extends Component{
 
     state = {
         NumOfTravellers : 1,
         travelersDetail: [{ firstName: '', lastName: '', address: '', city: '', address: '', phoneNumber: '', city: '', state: '', zip: ''}],        
         trip: null,
+        paymentScreenshot: [],
+        totalAmount: null
+
     }
 
+
+    ///////
+    setPaymentScreenshot = (e) =>{
+      e.preventDefault();
+      this.setState({ paymentScreenshot: [] });
+      const imageFiles = e.target.files
+
+      for(var i = 0; i < imageFiles.length; i++){
+          let reader = new FileReader();
+          let file = imageFiles[i];
+
+          reader.onloadend = () =>{
+              this.setState({ paymentScreenshot: this.state.paymentScreenshot.concat(reader.result) });
+          }
+
+          reader.readAsDataURL(file);
+      }
+    }
+    //////
+     handleDelete = (screenshot) =>{
+      let paymentScreenshot = this.state.paymentScreenshot.filter(item => item !== screenshot);
+      this.setState({...this.state, paymentScreenshot })
+  }
+    //////
 
     componentDidMount = async () =>{
       const token = localStorage.getItem("token");
@@ -18,7 +45,7 @@ class BookingDetails extends Component{
       console.log(this.state.travelersDetail)
       try{
         if(response.data){
-          this.setState({trip: response.data});
+          this.setState({trip: response.data, totalAmount: parseInt(response.data.price)});
           console.log("Booking Details state: ",this.state.trip)
         }
       }
@@ -35,29 +62,46 @@ class BookingDetails extends Component{
       this.setState({ travelersDetail });
   }
 
-    // check
-    check = (e) =>{
+    // handleSubmit
+    handleSubmit = (e) =>{
       e.preventDefault();
-      console.log("state travellers detail: ",this.state.travelersDetail)
+      if( this.state.travelersDetail.firstName == "",
+          this.state.travelersDetail.lastName == "" ,
+          this.state.travelersDetail.address == "" , 
+          this.state.travelersDetail.phoneNumber == "" ,
+          this.state.travelersDetail.city == "" ,
+          this.state.travelersDetail.state == "" ,
+          this.state.travelersDetail.zip == "" , 
+          this.state.trip == null ,
+           this.state.paymentScreenshot.length == 0){
+          return alert("Please fill in all the fileds!")
+      }
+      this.props.createBooking(this.state);
+      console.log("state CreateBooking: ",this.state)
     }
 
     // To increase or decrease the number of travelers
     handleClick = (e) => {
       e.preventDefault();
       const travelersDetailCopy = [...this.state.travelersDetail];
+      let totalAmount;
       if (e.target.id == 'plus') {
           travelersDetailCopy.push({
               firstName: '', lastName: '', address: '', city: '', address: '', phoneNumber: '', city: '', state: '', zip: '' // Add empty data
           });
+          totalAmount = parseInt(this.state.trip.price)*travelersDetailCopy.length;
+
       } else if (e.target.id == 'minus') {
           if (this.state.travelersDetail.length === 1) {
               alert("Can't be less than 1");
           } else {
               travelersDetailCopy.pop();
+              totalAmount = parseInt(this.state.trip.price)*travelersDetailCopy.length;
           }
       }
       this.setState({
-          travelersDetail: travelersDetailCopy
+          travelersDetail: travelersDetailCopy,
+          totalAmount
       });
   }
 
@@ -163,54 +207,34 @@ const numberOfTravelers = () => {
         <br/><br/>
         <hr/>
         <h4>Payment Details</h4><br/>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="inputFirstName4">First Name</label>
-            <input type="FirstName" className="form-control" id="inputFirstName4" placeholder="FirstName" />
-          </div>
-          <div className="form-group col-md-6">
-            <label htmlFor="inputLastName4">Last Name</label>
-            <input type="LastName" className="form-control" id="inputLastName4" placeholder="LastName" />
-          </div>
+        <div className="payment-details">
+        <b className="payment-info">you can proceed the payment with any of the option and attach the screenshot for either jazzCash or personal bank account.</b>
+        <br/><br/>
+        <h6>Account Number: <b>003002000426333</b></h6>
+        <h6>jazzCash mobile account: <b>03234650357</b></h6>
+        <div className="col-sm-9">
+        <br/>
+        <span className="btn btn-default btn-file">
+          <input id="paymentScreenshot" required="true" onChange={this.setPaymentScreenshot} name="input2[]"  type="file" className="file" multiple data-show-upload="true" data-show-caption="true" />
+        </span>
+
+        <div className="row">
+            {this.state.paymentScreenshot.map((item, index) => (    
+                        <div className="trip-images">
+                            <i onClick={() => this.handleDelete(item)} class="fas fa-times-circle trash"></i>
+                            <img src={item} />
+                        </div>
+                ))}
+        </div><br/>
+        <h5>We will verify and get back to you :)</h5>
+    </div>
+
+        
         </div>
-        <div className="form-group">
-          <label htmlFor="inputAddress">Address</label>
-          <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="inputPhoneNumber">Phone number</label>
-          <input type="text" className="form-control" id="phoneNumber" placeholder="Apartment, studio, or floor" />
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="inputCity">City</label>
-            <input type="text" className="form-control" id="inputCity" />
-          </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="state">State</label>
-            <select id="state" className="form-control">
-              <option selected>Choose...</option>
-              <option>...</option>
-            </select>
-          </div>
-          <div className="form-group col-md-2">
-            <label htmlFor="inputZip">Zip</label>
-            <input type="text" className="form-control" id="inputZip" />
-          </div>
-        </div>
-        <div className="form-group">
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" id="gridCheck" />
-            <label className="form-check-label" htmlFor="gridCheck">
-              Check me out
-            </label>
-          </div>
-        </div>
-        <button type="submit" className="btn btn-primary">Sign in</button>
         <br/><br/><br/>
         <input style={{marginLeft:'100px'}} className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" /> 
         <p style={{ fontSize: '15px' }}>Make sure you have agreed to all the terms & conditions of tripmanual</p>
-        <button type="button" onClick={this.check}  class="btn btn-secondary btn-lg btn-block">Book Trip</button>
+        <button type="button" onClick={this.handleSubmit}  class="btn btn-secondary btn-lg btn-block">Book Trip</button>
       </form>
       </div>
       </div>
@@ -220,4 +244,4 @@ const numberOfTravelers = () => {
     }
 }
 
-export default BookingDetails;
+export default CreateBooking;

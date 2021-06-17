@@ -18,7 +18,7 @@ class Dashboard extends Component {
 
       if(token){
         try{
-          const response = await axios.get(`${BASIC_URL}/trip/all`, { headers: { "Authorization": `Bearer ${token}` } });
+          const response = await axios.get(`${BASIC_URL}/trip/travelagency/all`, { headers: { "Authorization": `Bearer ${token}` } });
           console.log("Trips are retrieved: ",response.data);
           const trips = response.data
           // this.setState({trips})

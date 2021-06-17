@@ -2,10 +2,10 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom';
 
 
-const UserGuardedRoute = ({ component: Component, auth, ...rest }) => (
+const UserGuardedRoute = ({ component: Component, auth, createBooking, bookings, ...rest }) => (
     <Route {...rest} render={(props) =>(
         auth === true
-            ? <Component {...props} />
+            ? <Component {...props} createBooking={createBooking} bookings={bookings} />
             : <Redirect to='/user/login' />
 
     )} />
@@ -13,3 +13,6 @@ const UserGuardedRoute = ({ component: Component, auth, ...rest }) => (
 );
 
 export default UserGuardedRoute;
+
+
+

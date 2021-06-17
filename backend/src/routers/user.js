@@ -2,6 +2,8 @@ const { Router } = require('express')
 const express = require('express')
 const router = new express.Router()
 const User = require('../models/user')
+const Trip = require('../models/trip')
+const Booking = require('../models/booking')
 const auth = require('../middleware/auth')
 
 
@@ -78,7 +80,6 @@ router.post('/users/logout', auth, async(req, res) =>{
 })
 
 // Check route
-
 router.get("/user/authenticated", auth , (req, res) =>{
     try{
         res.send(req.user.firstName);
@@ -88,6 +89,47 @@ router.get("/user/authenticated", auth , (req, res) =>{
     }
 })
 
+// to create a new booking
+router.post('/user/createBooking', auth, async (req, res) =>{
+
+    if(req.user){    
+
+        const booking = Booking({
+                ...req.body,
+                user: req.user._id
+        });
+
+        try{
+            await booking.save();
+            res.status(201).send(booking);
+        }
+        catch(e){
+            res.status(400).send(e);
+        }
+    }
+    else{
+        res.status(401).send('Please authenticate!')
+    }
+})
+
+// to get all the bookings of the user
+router.get('/user/bookings/all', auth, async (req, res) =>{
+
+    if(req.user){    
+
+        const bookings = await Booking.find({ user: req.user._id })
+        
+        try{
+            res.status(200).send(bookings);
+        }
+        catch(e){
+            res.status(404).send(e);
+        }
+    }
+    else{
+        res.status(401).send('Please authenticate!')
+    }
+})
 
 module.exports = router
 

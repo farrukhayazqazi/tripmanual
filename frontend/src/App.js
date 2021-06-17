@@ -6,8 +6,9 @@ import Banner from './components/user/Banner.jsx'
 import Card from './components/user/Card.jsx'
 import TripDetails from './components/user/TripDetails.jsx'
 import TripListing from './components/user/TripListing.jsx'
-import BookingDetails from './components/user/BookingDetails.jsx'
+import CreateBooking from './components/user/CreateBooking.jsx'
 import Login from './components/user/Login.jsx'
+import UserBookings from './components/user/UserBookings.jsx'
 import TLogin from './components/travelAgency/TLogin.jsx'
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
@@ -33,9 +34,10 @@ class App extends Component {
     travelAgencyAuthenticated: false,
     name: [],
     errors: [],
-    trips: []
+    trips: [],
+    bookings: []
   }
-//////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 componentDidMount = async () =>{
 
   const token = localStorage.getItem("token");
@@ -46,9 +48,17 @@ componentDidMount = async () =>{
       
           if(response.data == "travel agency not found!"){
                const res = await axios.get("http://localhost:5000/user/authenticated", { headers: { "Authorization": `Bearer ${token}` } });
-               
+                             
             if(res.data){
-              return this.setState({ userAuthenticated: true, name: res.data })
+              const bookings = await axios.get("http://localhost:5000/user/bookings/all", { headers: { "Authorization": `Bearer ${token}` } });
+
+              if(bookings.data){
+                console.log("bookings detail: ", bookings.data)
+                 this.setState({ userAuthenticated: true, name: res.data, bookings: bookings.data })
+              }
+              else{
+                return this.setState({ userAuthenticated: true, name: res.data})
+              }
             }
             else{
               this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false, name: res.data })
@@ -123,7 +133,7 @@ componentDidMount = async () =>{
                                                                     password: user.password  
                                                                   })
                                                                 
-      console.log("response.data in login react user: ",response.data.error)
+      console.log("response.data in login react user: ",response.data)
       
     try{
       if(response.data.token){
@@ -150,6 +160,36 @@ componentDidMount = async () =>{
     localStorage.removeItem("token");
     this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false });
   }
+
+  //  TO CREATE A BOOKING FOR A NEW TRIP
+
+const createBooking = async (booking) =>{
+
+  let token = localStorage.getItem("token");
+
+  const response = await axios.post(`${BASIC_URL}/user/createBooking`,
+            {
+              trip: booking.trip._id,
+              trip_details: booking.trip,
+              seats_booked: booking.travelersDetail.length,
+              traveler_details: booking.travelersDetail,
+              total_amount: booking.totalAmount
+            }, {
+              headers: { "Authorization": `Bearer ${token}` }
+            })
+
+            console.log("response.data of booking from backend: ", response.data)
+
+            // try{
+            //   if(response.data){
+            //     let bookings = [...this.state.bookings, response.data]
+            //     this.setState({ bookings })
+            //   }
+            // }
+            // catch(e){
+            //   console.log("Unable to create booking!",e);
+            // }
+}
 
 
 
@@ -229,6 +269,8 @@ const createTrip = async (trip) =>{
               itinerary: trip.itinerary,
               included: trip.included,
               seats: trip.seats,
+              price: trip.price,
+              city: trip.city,
               startingDateAndTime: trip.startingDateAndTime,
               endingDateAndTime: trip.endingDateAndTime
             }, {
@@ -286,16 +328,18 @@ const mapTripsToState = (trips) =>{
 // <Route path='/travelAgency/tlogin/' render={(props) => <TLogin {...props} tAuthenticate={tAuthenticate} /> } />
 // <Route path='/travelAgency/tsignup/' render={(props) => <TSignup {...props} tsignUp={tsignUp} /> } />
 
-
+// <UserGuardedRoute path='/user/trip/:id'  component={TripDetails} auth={this.state.userAuthenticated} />
   return (
     <BrowserRouter>
     <div className="App">
     <NavBar userAuthenticated={this.state.userAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} />
     <Route exact path='/' render={(props) => <Banner {...props} /> } />
     <Route path='/user/tripListing/:id' render={(props) => <TripListing {...props} /> } />
+    <Route path='/user/trip/:id' render={(props) => <TripDetails {...props} /> } />
+
     {/*User Routes*/}
-    <UserGuardedRoute path='/user/trip/:id'  component={TripDetails} auth={this.state.userAuthenticated} />
-    <UserGuardedRoute path='/user/BookingDetails/:id' component={BookingDetails} auth={this.state.userAuthenticated} /> 
+    <UserGuardedRoute path='/user/bookings/all' component={UserBookings} bookings={this.state.bookings} auth={this.state.userAuthenticated} /> 
+    <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} createBooking={createBooking} auth={this.state.userAuthenticated} /> 
     <UserAuthCheck path='/user/login/'  component={Login}  authenticate={authenticate}   auth={this.state.userAuthenticated} />
     <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.userAuthenticated} />
     

@@ -13,6 +13,8 @@ class CreateTrip extends Component{
         title: '',
         description:'',
         included: [],
+        price: '',
+        city:'',
         seats: null,
         startingDateAndTime: { "date" : null, "time": null},
         endingDateAndTime: { "date" : null, "time": null}
@@ -315,6 +317,29 @@ class CreateTrip extends Component{
                 Start at :&nbsp;<input type='date' required="true" onChange={this.handleDateAndTime} id="startingDate"  />&nbsp;&nbsp; at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="startingTime"/> <br/><br/>
                 Ends at :&nbsp;<input type='date' required="true" onChange={this.handleDateAndTime} id="endingDate" />&nbsp;&nbsp;at:&nbsp;<input type='time' onChange={this.handleDateAndTime} id="endingTime"/>
             </div>
+            
+            <hr/><br/>
+            <div className="input-group mb-3 col-4 create-title">
+            <h4>Departure from: &nbsp; &nbsp;</h4>
+            <select  onChange={this.handleChange} id="city" className="form-control">
+            <option selected={true} disabled={true}>...</option>
+            <option>Lahore</option>
+            <option>Islamabad</option>
+            <option>Karachi</option>
+            <option>Rawalpindi</option>
+            <option>Quetta</option>
+            <option>Multan</option>
+        </select>
+            </div>
+            <hr/>
+            <br/>
+            <div className="input-group mb-3 col-4 create-title">
+            <h4>Price: &nbsp; &nbsp;</h4>
+            <input type="number" min="1000" required="true" className="form-control" onChange={this.handleChange} id="price" placeholder='price per person in pkr' aria-label="price" aria-describedby="basic-addon2" />
+            &nbsp; <b style={{marginTop: "8px", paddingLeft:"5px"}} >PKR</b>
+            </div>
+            <hr/>
+        
             
 
             <br/><br/><br/>

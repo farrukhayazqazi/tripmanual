@@ -5,21 +5,9 @@ const Trip = require('../models/trip')
 const auth = require('../middleware/auth')
 
 
-// to find a specific trip
-router.get('/trip/:id', auth, async (req, res) =>{
 
-    let id = req.params.id;
 
-    try{
-        const trip = await Trip.findById({ _id: id });
-        await trip.populate('owner').execPopulate();
-        res.send(trip);
-    }
-    catch(e){
-        res.send();
-    }
 
-})
 
 // to create a new trip
 router.post('/trip/create', auth, async (req, res) =>{
@@ -48,7 +36,7 @@ router.post('/trip/create', auth, async (req, res) =>{
 
 // get all the trips for a travel agency
 
-router.get("/trip/all", auth, async (req, res) =>{
+router.get("/trip/travelagency/all", auth, async (req, res) =>{
 
     try{
         await req.travelagency.populate('trips').execPopulate()
@@ -60,7 +48,7 @@ router.get("/trip/all", auth, async (req, res) =>{
 
 })
 
-// get all the trips in the database
+// get all the trips in the database related to the search  
 
 router.get("/trip/all/:id", async (req, res) =>{
 
@@ -74,6 +62,40 @@ router.get("/trip/all/:id", async (req, res) =>{
     catch(e){
         res.send();
     }
+})
+
+
+// to find a specific trip (departure ) from a specific city 
+router.get('/trip/:city/:title', async (req, res) =>{
+
+    let title = req.params.title;
+    let city = req.params.city;
+
+    try{
+        console.log("city and title: ",city + " " + title)
+        const trip = await Trip.find({ title: {"$regex":title , $options: 'i'} , city: city});
+        res.send(trip);
+    }
+    catch(e){
+        res.send();
+    }
+
+})
+
+// to find a specific trip
+router.get('/trip/:id', async (req, res) =>{
+
+    let id = req.params.id;
+
+    try{
+        const trip = await Trip.findById({ _id: id });
+        await trip.populate('owner').execPopulate();
+        res.send(trip);
+    }
+    catch(e){
+        res.send();
+    }
+
 })
 
 

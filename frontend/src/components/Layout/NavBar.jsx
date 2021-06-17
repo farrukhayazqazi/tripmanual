@@ -96,7 +96,7 @@ class NavBar extends Component{
               </div>
             </li>
             <li className="nav-item">
-              <a className="nav-link disabled" href="#">Disabled</a>
+              <Link className="nav-link" to="/user/bookings/all">Bookings</Link>
             </li>
           </ul>
 

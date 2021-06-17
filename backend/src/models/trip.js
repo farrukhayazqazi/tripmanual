@@ -31,6 +31,11 @@ const tripSchema = new mongoose.Schema({
         required: true
     },
 
+    price:{
+        type: String,
+        required: true
+    },
+
     included:{
         type: Array,
         required: true
@@ -42,6 +47,10 @@ const tripSchema = new mongoose.Schema({
         default: 1
     },
 
+    city:{
+        type: String,
+        required: true
+    },
     startingDateAndTime: [{
         date: {
             type: String,

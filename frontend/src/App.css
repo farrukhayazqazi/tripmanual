@@ -530,3 +530,27 @@ border-radius: 50%;
 .card-tripListing{
   margin-top: 15px;
 }
+
+.location-menu{
+  margin-top: 20px;
+}
+
+.location-menu label{
+  display: inline-block;
+}
+
+.payment-details .payment-info{
+  color: rgb(190, 3, 3);
+}
+
+.user-bookings{
+  justify-content: center;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.user-bookings h3{
+  margin-bottom: 20px;
+}
+
+
