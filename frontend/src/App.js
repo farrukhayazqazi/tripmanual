@@ -158,7 +158,7 @@ componentDidMount = async () =>{
   // TO LOGOUT/SIGNOUT A USER OR A TRAVEL AGENT/TRIP OPERATOR
   const logout = () =>{
     localStorage.removeItem("token");
-    this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false });
+    this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false, bookings: [] });
   }
 
   //  TO CREATE A BOOKING FOR A NEW TRIP
@@ -180,15 +180,15 @@ const createBooking = async (booking) =>{
 
             console.log("response.data of booking from backend: ", response.data)
 
-            // try{
-            //   if(response.data){
-            //     let bookings = [...this.state.bookings, response.data]
-            //     this.setState({ bookings })
-            //   }
-            // }
-            // catch(e){
-            //   console.log("Unable to create booking!",e);
-            // }
+            try{
+              if(response.data){
+                let bookings = [...this.state.bookings, response.data]
+                this.setState({ bookings })
+              }
+            }
+            catch(e){
+              console.log("Unable to create booking!",e);
+            }
 }
 
 
@@ -290,6 +290,14 @@ const createTrip = async (trip) =>{
             }
 }
 
+
+///////////////////////////////BOOKINGS RELATED FUNCTIONS////////////////////////////
+
+const mapBookingsToMainState = (bookings) =>{
+  this.setState({bookings});
+}
+///////////////////////////////////////////////////////////////////////////////////
+
 // TO RETRIEVE ALL THE TRIPS FOR A TRAVEL AGENCY
 // const getTrips = () =>{
 //   let token = localStorage.getItem("token");
@@ -329,16 +337,19 @@ const mapTripsToState = (trips) =>{
 // <Route path='/travelAgency/tsignup/' render={(props) => <TSignup {...props} tsignUp={tsignUp} /> } />
 
 // <UserGuardedRoute path='/user/trip/:id'  component={TripDetails} auth={this.state.userAuthenticated} />
-  return (
+  
+// <NavBar userAuthenticated={this.state.userAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} />
+
+return (
     <BrowserRouter>
     <div className="App">
-    <NavBar userAuthenticated={this.state.userAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} />
+    <Route render={(props) => <NavBar {...props} mapTripsToState={mapTripsToState} userAuthenticated={this.state.userAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} /> } />
     <Route exact path='/' render={(props) => <Banner {...props} /> } />
-    <Route path='/user/tripListing/:id' render={(props) => <TripListing {...props} /> } />
+    <Route path='/user/tripListing/:id' render={(props) => <TripListing {...props} mapTripsToState={mapTripsToState} trips={this.state.trips} /> } />
     <Route path='/user/trip/:id' render={(props) => <TripDetails {...props} /> } />
 
     {/*User Routes*/}
-    <UserGuardedRoute path='/user/bookings/all' component={UserBookings} bookings={this.state.bookings} auth={this.state.userAuthenticated} /> 
+    <UserGuardedRoute path='/user/bookings/all' component={UserBookings} mapBookingsToMainState={mapBookingsToMainState} bookings={this.state.bookings} auth={this.state.userAuthenticated} /> 
     <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} createBooking={createBooking} auth={this.state.userAuthenticated} /> 
     <UserAuthCheck path='/user/login/'  component={Login}  authenticate={authenticate}   auth={this.state.userAuthenticated} />
     <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.userAuthenticated} />

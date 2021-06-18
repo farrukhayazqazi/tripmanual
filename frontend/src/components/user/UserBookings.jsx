@@ -1,16 +1,31 @@
 import React from 'react'
 import { Component } from 'react'
 import { Link } from 'react-router-dom'
+import axios  from 'axios'
+class UserBookings extends Component{
 
-const UserBookings = ({ bookings }) =>{
+  state = {
+    bookings: []
+  }
 
+  componentDidMount = async () =>{
+    const token = localStorage.getItem("token");
+    const bookings = await axios.get("http://localhost:5000/user/bookings/all", { headers: { "Authorization": `Bearer ${token}` } });
+    if(bookings.data){
+      this.props.mapBookingsToMainState(bookings.data);
+      this.setState({ bookings: bookings.data })
+    }
+  } 
+
+
+  render(){
     return (
         <div className="container user-bookings">
         <h3><b>My Bookings</b></h3>
           <div className="row">
-            {bookings ? 
+            {this.state.bookings.length > 0 || this.props.bookings.length > 0 ? 
               (
-                bookings.map((booking, i) =>{   
+                this.state.bookings.map((booking, i) =>{   
             return booking.trip_details.map((trip, index) =>{
                     return(
                       <div className="trip-card" key={index}>
@@ -26,16 +41,16 @@ const UserBookings = ({ bookings }) =>{
 
           })
           )
-            
-
             : 
-            
-            (<p>no trips booked :)</p>)}
+            ( <div className="container err-message">
+              <p>no trips booked :)</p>
+              </div>
+              )}
             </div>
         </div>
     )
 }
-
+}
 
 
 export default UserBookings;

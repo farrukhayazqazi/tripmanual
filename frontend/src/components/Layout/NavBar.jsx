@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react';
 import { NavLink, Link, Redirect } from 'react-router-dom';
-
+import axios from 'axios';
 class NavBar extends Component{
 
     state = {
@@ -10,6 +10,30 @@ class NavBar extends Component{
 
     handleChange = (e) =>{
       this.setState({ [e.target.id]: e.target.value })
+    }
+
+    handleSubmit = async (e) =>{
+      e.preventDefault();
+      let searchValue = this.state.searchValue;
+
+      // const { searchValue } = this.state
+      const BASIC_URL = "http://localhost:5000";
+      
+      const response = await axios.get(`${BASIC_URL}/trip/all/${searchValue}`)
+      console.log("response.data in tripListing: ",response.data)
+      const trips = response.data
+    
+      
+      if(response.data){
+        this.props.mapTripsToState(trips)
+        this.props.history.push(`/user/tripListing/${searchValue}`);
+        document.getElementById('city').selectedIndex = 0; 
+        document.getElementById('searchValue').value = ''
+      }
+      else{
+        console.log("trip not found!")
+      }
+
     }
 
 
@@ -101,9 +125,9 @@ class NavBar extends Component{
           </ul>
 
 
-          <form className="form-inline my-2 my-lg-0" action={`/user/tripListing/${this.state.searchValue}`}>
+          <form className="form-inline my-2 my-lg-0" onSubmit={this.handleSubmit}>
             <input className="form-control mr-sm-2" type="search" onChange={this.handleChange} placeholder="Search" id="searchValue" aria-label="Search" />
-            <a className="btn btn-outline-success my-2 my-sm-0" href={`/user/tripListing/${this.state.searchValue}`} type="submit"><i class="fas fa-search"></i></a>
+            <Link className="btn btn-outline-success my-2 my-sm-0" to={`/user/tripListing/${this.state.searchValue}`} type="submit"><i class="fas fa-search"></i></Link>
           </form>
           </div>
 

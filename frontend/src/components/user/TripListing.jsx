@@ -1,71 +1,40 @@
 import React from 'react'
 import { Component } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-class TripListing extends Component{
+const TripListing = ({ mapTripsToState, trips }) =>{
 
-  state={
-    trips: [],
-    error: null
-  }
-
- componentDidMount = async () =>{
-  let title = this.props.match.params.id;
-  const BASIC_URL = "http://localhost:5000";
   
-  const response = await axios.get(`${BASIC_URL}/trip/all/${title}`)
-  console.log("response.data in tripListing: ",response.data)
-  const trips = response.data
+const { id } = useParams();
 
-  if(response.data){
-    return this.setState({ trips })
-    console.log("this is the state: ",this.state.trips)
-  }
-  else{
-     let error = { message: `No search results for ${this.props.match.params}`  }
-     this.setState({ error })
-  }
-}
-
-retrieveTrips = async (e) =>{
+const retrieveTrips = async (e) =>{
   console.log("retrieveTrips: ",e.target.value);
 
-  let title = this.props.match.params.id;
+  let title = id;
   let city = e.target.value;
   const BASIC_URL = "http://localhost:5000";
-  
+
   const response = await axios.get(`${BASIC_URL}/trip/${city}/${title}`)
   console.log("trip retrieved in retrieveTrips: ",response.data)
   console.log("URL: ",`${BASIC_URL}/trip/${city}/${title}`)
-  const trips = response.data
-
   if(response.data){
-    this.setState({ trips })
+    mapTripsToState(response.data)
+}
+else{
+  console.log('error')
 }
 }
 
-  // retrieveTrips = async (city) =>{
-    // let title = this.props.match.params.id;
-    // const BASIC_URL = "http://localhost:5000";
-    
-    // const response = await axios.get(`${BASIC_URL}/trip/all/${title}`)
-    // console.log("response.data in tripListing: ",response.data)
-    // const trips = response.data
 
-    // if(response.data){
-    //   this.setState({ trips })
-  //   }
-  //   console.log("this is the state: ",this.state.trips)
-  // }
-
-    render(){
+  
+      
     return(
         <div className='container'>
         <div className="container">
           <div className="form-group col-md-3 location-menu">
             <label><i className="fas fa-map-marker-alt"></i></label>
-              <select id="city" onChange={this.retrieveTrips} className="form-control">
+              <select id="city" onChange={retrieveTrips} className="form-control">
                   <option selected={true} disabled={true}>Departure from:</option>
                   <option>Lahore</option>
                   <option>Islamabad</option>
@@ -74,13 +43,14 @@ retrieveTrips = async (e) =>{
                   <option>Quetta</option>
                   <option>Multan</option>
               </select>
+              <input type="reset" value="Reset" />
           </div>
             <div className="search-title">
-               <h4>Showing results for "{this.props.match.params.id}"</h4>
+               <h4>Showing results for "{id}"</h4>
             </div>
             <div className="row">
              <div className="col">
-               { this.state.error !== {} ? (this.state.trips.map((trip,index) => (
+               { trips ? (trips.map((trip,index) => (
                  
               <div className="card card-tripListing" key={index}>
               <div className="card-horizontal">
@@ -98,7 +68,8 @@ retrieveTrips = async (e) =>{
               
               ))) 
               :
-              <p>No search results for "{this.props.match.params}"</p> }
+              (<p>No search results for "{id}"</p>)
+             }
           </div>
           
         </div>
@@ -108,7 +79,8 @@ retrieveTrips = async (e) =>{
         </div>
         
         )
+
 }
-}
+
 
 export default TripListing;

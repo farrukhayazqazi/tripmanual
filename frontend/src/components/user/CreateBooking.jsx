@@ -77,6 +77,7 @@ class CreateBooking extends Component{
           return alert("Please fill in all the fileds!")
       }
       this.props.createBooking(this.state);
+      this.props.history.push('/user/bookings/all')
       console.log("state CreateBooking: ",this.state)
     }
 
