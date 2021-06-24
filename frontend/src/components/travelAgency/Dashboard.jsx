@@ -35,6 +35,7 @@ class Dashboard extends Component {
 
     
     render(){
+    
     return (
         <div className="container dashboard">
         
@@ -62,7 +63,7 @@ class Dashboard extends Component {
         <div className="card">
           <img className="card-img" src={update} alt="Bologna" />
           <div className="card-img-overlay text-white d-flex flex-column justify-content-center">
-          <Link className="btn btn-warning" to="#">Update Trip</Link>
+          <Link className="btn btn-warning" to="/travelAgency/updatetrip">Update Trip</Link>
           </div>
         </div>
       </div>
@@ -73,7 +74,7 @@ class Dashboard extends Component {
       <div className="card">
         <img className="card-img" style={{paddingBottom: "60px"}} src={deletee} alt="Bologna" />
         <div className="card-img-overlay text-dark d-flex flex-column justify-content-center">
-        <Link className="btn btn-danger" to="#">Delete Trip</Link>
+        <Link className="btn btn-danger" to="/travelAgency/deletetrip">Delete Trip</Link>
         </div>
       </div>
     </div>

@@ -112,6 +112,14 @@ tripSchema.methods.isCompleted = () =>{
     }
 }
 
+// if the trip is deleted remove the bookings associated with it
+tripSchema.pre('remove', async function(next){
+    const trip = this
+    await Booking.deleteMany({ trip: trip._id })
+    next()
+})
+
+
 const Trip = mongoose.model('Trip', tripSchema);
 
 module.exports = Trip

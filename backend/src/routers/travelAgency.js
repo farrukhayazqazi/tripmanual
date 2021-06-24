@@ -3,8 +3,10 @@ const express = require('express')
 const router = new express.Router()
 const TravelAgency = require('../models/travelAgency');
 const User = require('../models/user');
+const Booking = require('../models/booking');
 const auth = require('../middleware/auth');
 const { findOne } = require('../models/user');
+const Trip = require('../models/trip');
 
 
 
@@ -64,6 +66,27 @@ router.post('/travelAgency/logout', auth, async(req, res) =>{
     }
 })
 
+// get the bookings of a travel agency (trips that are booked by users)
+router.get('/travelAgency/getBookings', auth, async (req, res) =>{
+    
+    if(req.travelagency){
+
+        try{
+
+            const bookings = await Booking.find({ "trip_details.owner._id" : req.travelagency._id.toString()  })
+            // await bookings.populate().execPopulate();
+            // const user = await User.findById({ _id: bookings.user._id.toString() })
+            // bookings[user] = user;
+            // console.log(bookings)
+            res.send(bookings)
+        }
+        catch(e){
+            res.send();
+        }
+    }
+
+})
+
 // Check route
 
 router.get("/travelAgency/authenticated", auth , (req, res) =>{
@@ -75,7 +98,6 @@ router.get("/travelAgency/authenticated", auth , (req, res) =>{
         res.send("travel agency not found!")
     }
 })
-
 
 
 module.exports = router

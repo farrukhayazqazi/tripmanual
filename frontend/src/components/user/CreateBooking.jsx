@@ -76,6 +76,7 @@ class CreateBooking extends Component{
            this.state.paymentScreenshot.length == 0){
           return alert("Please fill in all the fileds!")
       }
+      console.log("trip.owner: ",this.state.trip.owner)
       this.props.createBooking(this.state);
       this.props.history.push('/user/bookings/all')
       console.log("state CreateBooking: ",this.state)

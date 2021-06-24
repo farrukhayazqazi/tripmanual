@@ -55,7 +55,9 @@ class NavBar extends Component{
             <li className="nav-item active">
               <NavLink className="nav-link" to="/travelAgency/dashboard"><span className="sr-only"></span></NavLink>
             </li>
-          </ul>
+            <NavLink className="nav-link" to="/travelAgency/dashboard">Dashboard <span className="sr-only"></span></NavLink>
+            <NavLink className="nav-link" to="/travelAgency/getBookings">Bookings</NavLink>
+            </ul>
 
 
 

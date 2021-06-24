@@ -25,6 +25,10 @@ import UserSignupCheck from './components/UserSignupCheck';
 import TravelAgencyAuthCheck from './components/TravelAgencyAuthCheck';
 import TravelAgencySignupCheck from './components/TravelAgencySignupCheck';
 import ViewTrip from './components/travelAgency/ViewTrip';
+import DeleteTrip from './components/travelAgency/DeleteTrip';
+import UpdateTripPage from './components/travelAgency/UpdateTripPage';
+import UpdateTrip from './components/travelAgency/UpdateTrip';
+import ViewBookings from './components/travelAgency/ViewBookings';
 
 
 class App extends Component {
@@ -290,6 +294,64 @@ const createTrip = async (trip) =>{
             }
 }
 
+// to delete a trip
+const deleteTrip = async (tripID) =>{
+
+  let token = localStorage.getItem("token")
+  const response = await axios.delete(`${BASIC_URL}/trip/delete/${tripID}`,
+  {
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+
+  try{
+    if(response.data){
+      const trips = this.state.trips.filter(trip => trip._id !== tripID)
+      this.setState({ trips })
+    }
+  }
+  catch(e){
+    console.log("Unable to create trip!",e);
+  }
+
+  
+}
+
+const updateTrip = async (trip) =>{
+
+  let token = localStorage.getItem("token");
+console.log(trip._id)
+  const response = await axios.patch(`${BASIC_URL}/trip/update/${trip._id}`,
+            {
+              title: trip.title,
+              days: trip.days,
+              images: trip.images,
+              description: trip.description,
+              itinerary: trip.itinerary,
+              included: trip.included,
+              seats: trip.seats,
+              startingDateAndTime: trip.startingDateAndTime,
+              endingDateAndTime: trip.endingDateAndTime
+            }, {
+              headers: { "Authorization": `Bearer ${token}` }
+            })
+
+            console.log("response.data in updateTrip react js: ",response.data)
+            try{
+              if(response.data){
+                let trips = this.state.trips.filter(tripp => tripp._id !== trip._id)
+                trips.push(response.data);
+                this.setState({ trips })
+                alert('Trip Updated!')
+              }
+            }
+            catch(e){
+              console.log("Unable to create trip!",e);
+            }
+}
+
+/////////
+
+
 
 ///////////////////////////////BOOKINGS RELATED FUNCTIONS////////////////////////////
 
@@ -358,6 +420,10 @@ return (
     <TravelAgencyGuardedRoute exact path='/travelAgency/dashboard'    component={Dashboard} mapTripsToState={mapTripsToState} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
     <TravelAgencyGuardedRoute exact path='/travelAgency/createtrip' component={CreateTrip} createTrip={createTrip} auth={this.state.travelAgencyAuthenticated}  />
     <TravelAgencyGuardedRoute exact path='/travelAgency/trip/:id'    component={ViewTrip}  tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/deletetrip'    component={DeleteTrip}  deleteTrip={deleteTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/updatetrip'    component={UpdateTripPage}  updateTrip={updateTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/updatetrip/:id'    component={UpdateTrip}  updateTrip={updateTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/getBookings'    component={ViewBookings}   auth={this.state.travelAgencyAuthenticated}  />
     <TravelAgencyAuthCheck path='/travelAgency/tlogin/' component={TLogin} tAuthenticate={tAuthenticate}  auth={this.state.travelAgencyAuthenticated} />
     <TravelAgencySignupCheck path='/travelAgency/tsignup/' component={TSignup} tsignUp={tsignUp} auth={this.state.travelAgencyAuthenticated} />
 
