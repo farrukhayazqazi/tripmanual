@@ -82,7 +82,7 @@ router.post('/users/logout', auth, async(req, res) =>{
 // Check route
 router.get("/user/authenticated", auth , (req, res) =>{
     try{
-        res.send(req.user.firstName);
+        res.send(req.user);
     }
     catch(e){
         res.send(e)
@@ -128,6 +128,19 @@ router.get('/user/bookings/all', auth, async (req, res) =>{
     }
     else{
         res.status(401).send('Please authenticate!')
+    }
+})
+
+
+/// trips related on home page ( to get the latest records)
+router.get('/trips/latest', async (req, res) =>{
+
+    try{
+        const trips = await Trip.find().sort({ _id:1 }).limit(3)
+        res.send(trips)
+    }
+    catch(e){
+        res.send();
     }
 })
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import Card from './Card'
+import Trips from './Trips'
 import { Link } from 'react-router-dom'
 import { Component } from 'react'
 
@@ -40,7 +40,7 @@ class Banner extends Component{
         </div>
         </div>
         <div className="container">
-        <Card />
+        <Trips trips={this.props.trips} />
         </div>
         </div>
         )

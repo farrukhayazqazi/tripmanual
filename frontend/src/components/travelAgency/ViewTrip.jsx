@@ -162,7 +162,7 @@ class ViewTrip extends Component{
         </div>
         <div id="collapseFour" className="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
           <div className="card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            {trip.itinerary.map((itinerary, index) => <><b>{itinerary.slice(0,5)}&nbsp;</b>{itinerary.slice(5,)}<br/><br/></>)}
           </div>
         </div>
       </div>
@@ -177,7 +177,7 @@ class ViewTrip extends Component{
         </div>
         <div id="collapseFive" className="collapse show" aria-labelledby="headingFive" data-parent="#accordion">
           <div className="card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          For a full refund, cancel at least 24 hours in advance of the start date of the experience.
           </div>
         </div>
       </div>
@@ -192,7 +192,15 @@ class ViewTrip extends Component{
         </div>
         <div id="collapseSix" className="collapse show" aria-labelledby="headingSix" data-parent="#accordion">
           <div className="card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                   <b>Q: What is the policy on face masks and attendee health during Tour ?</b> <br/>
+           A: The policies on face masks and attendee health are: <br/><br/>
+           Face masks required for guides in public areas. <br/> 
+           Face masks provided for travelers Temperature checks for travelers upon arrival See all safety measures taken by Tour . <br/><br/>
+           <b>Q: What is the policy on sanitization during Tour ?</b><br/>
+           A: The policy on sanitization is: Hand sanitizer available to travelers and staff See all safety measures taken by Tour . <br/><br/>
+           <b>Q: What is the social distancing policy during Tour ?</b><br/>
+            A: The policy on social distancing is: <br/>
+           Contactless payments for gratuities and add-ons See all safety measures taken by Tour .
           </div>
         </div>
       </div>

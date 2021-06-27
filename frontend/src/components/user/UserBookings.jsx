@@ -36,6 +36,7 @@ class UserBookings extends Component{
                         <hr/>
                         <h6>seats booked: <b>{booking.seats_booked}</b></h6>
                         <h6>status: <b>{booking.status}</b></h6>
+                        <button type="button" className="btn btn-secondary">Cancel Booking</button>
                       </div>
                       </div>
                       </div>

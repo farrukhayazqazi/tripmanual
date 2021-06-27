@@ -3,7 +3,7 @@ import Home from './components/user/Home.jsx';
 import NavBar from './components/Layout/NavBar.jsx';
 import Footer from './components/Layout/Footer.jsx';
 import Banner from './components/user/Banner.jsx'
-import Card from './components/user/Card.jsx'
+import Trips from './components/user/Trips.jsx'
 import TripDetails from './components/user/TripDetails.jsx'
 import TripListing from './components/user/TripListing.jsx'
 import CreateBooking from './components/user/CreateBooking.jsx'
@@ -36,6 +36,7 @@ class App extends Component {
   state = {
     userAuthenticated: false,
     travelAgencyAuthenticated: false,
+    adminAuthenticated: false,
     name: [],
     errors: [],
     trips: [],
@@ -45,27 +46,28 @@ class App extends Component {
 componentDidMount = async () =>{
 
   const token = localStorage.getItem("token");
+  console.log("token: ",token)
+  const trips = await axios.get("http://localhost:5000/trips/latest");
+     this.setState({ trips: trips.data })
 
-  try{
-    if(token){
+    try{
+      if(token){
       const response = await axios.get("http://localhost:5000/travelAgency/authenticated", { headers: { "Authorization": `Bearer ${token}` } });
-      
           if(response.data == "travel agency not found!"){
                const res = await axios.get("http://localhost:5000/user/authenticated", { headers: { "Authorization": `Bearer ${token}` } });
-                             
+                      
             if(res.data){
               const bookings = await axios.get("http://localhost:5000/user/bookings/all", { headers: { "Authorization": `Bearer ${token}` } });
-
-              if(bookings.data){
-                console.log("bookings detail: ", bookings.data)
-                 this.setState({ userAuthenticated: true, name: res.data, bookings: bookings.data })
-              }
-              else{
-                return this.setState({ userAuthenticated: true, name: res.data})
+                if(res.data.role == "user"){
+                 return this.setState({ userAuthenticated: true, name: res.data.firstName, bookings: bookings.data })    
+                }
+                
+              else if(res.data.role == "admin"){
+              return this.setState({ adminAuthenticated: true, name: res.data.firstName, bookings: bookings.data })
               }
             }
             else{
-              this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false, name: res.data })
+              this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false, name: res.data.firstName })
             }
             
           }
@@ -74,10 +76,13 @@ componentDidMount = async () =>{
           }
         }
 
-  }
-  catch(e){
-    console.log(e)
-  }
+    }
+    catch(e){
+      console.log(e)
+      }
+    
+  
+
 
 }
 
@@ -138,13 +143,22 @@ componentDidMount = async () =>{
                                                                   })
                                                                 
       console.log("response.data in login react user: ",response.data)
+      console.log("response.data.user.role in login react user: ",response.data.user.role)
       
     try{
       if(response.data.token){
-        localStorage.setItem("token", response.data.token)
-        const name = [response.data.user.firstName];
+          localStorage.setItem("token", response.data.token)
+          const name = [response.data.user.firstName];
+
+        if(response.data.user.role == "admin"){
         console.log("name: ",response.data.user.firstName)
-        this.setState({ userAuthenticated:true, name})
+        return this.setState({ adminAuthenticated:true, name})
+        }
+
+        else{
+        console.log("name: ",response.data.user.firstName)
+        return this.setState({ userAuthenticated:true, name})
+        }
       }
       else{
         const errors = [];
@@ -162,7 +176,7 @@ componentDidMount = async () =>{
   // TO LOGOUT/SIGNOUT A USER OR A TRAVEL AGENT/TRIP OPERATOR
   const logout = () =>{
     localStorage.removeItem("token");
-    this.setState({ userAuthenticated: false, travelAgencyAuthenticated: false, bookings: [] });
+    this.setState({ userAuthenticated: false, adminAuthenticated: false, travelAgencyAuthenticated: false, bookings: [] });
   }
 
   //  TO CREATE A BOOKING FOR A NEW TRIP
@@ -398,34 +412,34 @@ const mapTripsToState = (trips) =>{
 // <Route path='/travelAgency/tlogin/' render={(props) => <TLogin {...props} tAuthenticate={tAuthenticate} /> } />
 // <Route path='/travelAgency/tsignup/' render={(props) => <TSignup {...props} tsignUp={tsignUp} /> } />
 
-// <UserGuardedRoute path='/user/trip/:id'  component={TripDetails} auth={this.state.userAuthenticated} />
+// <UserGuardedRoute path='/user/trip/:id'  component={TripDetails} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
   
 // <NavBar userAuthenticated={this.state.userAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} />
 
 return (
     <BrowserRouter>
     <div className="App">
-    <Route render={(props) => <NavBar {...props} mapTripsToState={mapTripsToState} userAuthenticated={this.state.userAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} /> } />
-    <Route exact path='/' render={(props) => <Banner {...props} /> } />
+    <Route render={(props) => <NavBar {...props} mapTripsToState={mapTripsToState} userAuthenticated={this.state.userAuthenticated} adminAuthenticated={this.state.adminAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} /> } />
+    <Route exact path='/' render={(props) => <Banner trips={this.state.trips} {...props} /> } />
     <Route path='/user/tripListing/:id' render={(props) => <TripListing {...props} mapTripsToState={mapTripsToState} trips={this.state.trips} /> } />
     <Route path='/user/trip/:id' render={(props) => <TripDetails {...props} /> } />
 
     {/*User Routes*/}
-    <UserGuardedRoute path='/user/bookings/all' component={UserBookings} mapBookingsToMainState={mapBookingsToMainState} bookings={this.state.bookings} auth={this.state.userAuthenticated} /> 
-    <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} createBooking={createBooking} auth={this.state.userAuthenticated} /> 
-    <UserAuthCheck path='/user/login/'  component={Login}  authenticate={authenticate}   auth={this.state.userAuthenticated} />
-    <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.userAuthenticated} />
+    <UserGuardedRoute path='/user/bookings/all' component={UserBookings} mapBookingsToMainState={mapBookingsToMainState} bookings={this.state.bookings} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
+    <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} createBooking={createBooking} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
+    <UserAuthCheck path='/user/login/'  component={Login}  authenticate={authenticate}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
+    <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
     
     {/*Travel Agency Routes*/}
-    <TravelAgencyGuardedRoute exact path='/travelAgency/dashboard'    component={Dashboard} mapTripsToState={mapTripsToState} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyGuardedRoute exact path='/travelAgency/createtrip' component={CreateTrip} createTrip={createTrip} auth={this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyGuardedRoute exact path='/travelAgency/trip/:id'    component={ViewTrip}  tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyGuardedRoute exact path='/travelAgency/deletetrip'    component={DeleteTrip}  deleteTrip={deleteTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyGuardedRoute exact path='/travelAgency/updatetrip'    component={UpdateTripPage}  updateTrip={updateTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyGuardedRoute exact path='/travelAgency/updatetrip/:id'    component={UpdateTrip}  updateTrip={updateTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyGuardedRoute exact path='/travelAgency/getBookings'    component={ViewBookings}   auth={this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyAuthCheck path='/travelAgency/tlogin/' component={TLogin} tAuthenticate={tAuthenticate}  auth={this.state.travelAgencyAuthenticated} />
-    <TravelAgencySignupCheck path='/travelAgency/tsignup/' component={TSignup} tsignUp={tsignUp} auth={this.state.travelAgencyAuthenticated} />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/dashboard'    component={Dashboard} mapTripsToState={mapTripsToState} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/createtrip' component={CreateTrip} createTrip={createTrip} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/trip/:id'    component={ViewTrip}  tripOperator={this.state.name} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/deletetrip'    component={DeleteTrip}  deleteTrip={deleteTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/updatetrip'    component={UpdateTripPage}  updateTrip={updateTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/updatetrip/:id'    component={UpdateTrip}  updateTrip={updateTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/getBookings'    component={ViewBookings}   auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyAuthCheck path='/travelAgency/tlogin/' component={TLogin} tAuthenticate={tAuthenticate}  auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated} />
+    <TravelAgencySignupCheck path='/travelAgency/tsignup/' component={TSignup} tsignUp={tsignUp} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated} />
 
     <Footer />
     </div>

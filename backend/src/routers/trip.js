@@ -13,7 +13,7 @@ const auth = require('../middleware/auth')
 // to create a new trip
 router.post('/trip/create', auth, async (req, res) =>{
 
-    if(req.travelagency){    
+    if(req.travelagency || req.user.role == "admin"){    
 
         const trip = Trip({
                 ...req.body,

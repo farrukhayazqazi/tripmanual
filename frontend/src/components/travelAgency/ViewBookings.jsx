@@ -33,7 +33,7 @@ class ViewBookings extends Component{
             <thead className="thead-dark">
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">User</th>
+                <th scope="col">User ID</th>
                 <th scope="col">Booked Trip</th>
                 <th scope="col">Seats booked</th>
                 <th scope="col">Total Amount</th>
@@ -41,27 +41,15 @@ class ViewBookings extends Component{
               </tr>
             </thead>
             <tbody>
-            { this.state.bookings ? this.state.bookings.map(booking =>
+            { this.state.bookings ? this.state.bookings.map((booking, index) =>
              ( <>
               <tr>
-                <th scope="row">1</th>
+                <th scope="row">{index+1}</th>
                 <td>{booking.user}</td>
                 <td>{booking.trip_details.map(t => t.title)}</td>
                 <td>{booking.seats_booked}</td>
                 <td>{booking.total_amount}</td>
                 <td>{booking.status}</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
               </tr>
               </>
              )
