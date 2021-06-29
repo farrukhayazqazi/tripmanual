@@ -44,11 +44,9 @@ class ViewTrip extends Component{
         <div className="col-8">
         <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
         <ol className="carousel-indicators">
-          <li data-target="#carouselExampleIndicators" data-slide-to={0} className="active" />
-          <li data-target="#carouselExampleIndicators" data-slide-to={1} />
-          <li data-target="#carouselExampleIndicators" data-slide-to={2} />
-          <li data-target="#carouselExampleIndicators" data-slide-to={3} />
-          <li data-target="#carouselExampleIndicators" data-slide-to={4} />
+          {trip.images.map((trip, index) =>(<>
+            <li data-target="#carouselExampleIndicators" data-slide-to={index} className={ index == 0 ? "active" : "" } />
+          </>))}
         </ol>
 
 
@@ -58,6 +56,9 @@ class ViewTrip extends Component{
                 {trip.images.map((image, index) => (
                 <div className={`carousel-item ${index == 0 ? "active" : ""}`} key={index}>
                     <img className="d-block w-100" src={image} alt="First slide" />
+                    <div className="carousel-caption d-none d-md-block">
+                      <h5><span className="badge badge-pill badge-dark">{index+1}/{trip.images.length}</span></h5>
+                    </div>
                 </div>
                 ))}
                 </div>

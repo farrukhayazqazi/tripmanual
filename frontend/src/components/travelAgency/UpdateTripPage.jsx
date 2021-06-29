@@ -11,9 +11,6 @@ class UpdateTripPage extends Component {
 
 
     render() {
-
-
-
         return (
             <div className="container delete-trip">
             <h3><b>Update trip</b></h3>

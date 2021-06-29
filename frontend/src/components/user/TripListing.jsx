@@ -49,7 +49,7 @@ else{
                <h4>Showing results for "{id}"</h4>
             </div>
             <div className="row">
-             <div className="col">
+             <div className="col ">
                { trips ? (trips.map((trip,index) => (
                  
               <div className="card card-tripListing" key={index}>

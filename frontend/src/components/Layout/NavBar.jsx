@@ -109,21 +109,33 @@ class NavBar extends Component{
               <NavLink className="nav-link" to="/">Home <span className="sr-only"></span></NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">Dashboard</a>
+              <Link className="nav-link" to="/travelAgency/dashboard">Dashboard</Link>
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown
+                Bookings
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a className="dropdown-item" href="#">Action</a>
-                <a className="dropdown-item" href="#">Another action</a>
+          
+                <Link className="dropdown-item" to="/user/bookings/all">My Bookings</Link>
                 <div className="dropdown-divider" />
-                <a className="dropdown-item" href="#">Something else here</a>
+                <Link className="dropdown-item" to="/travelAgency/getBookings">Trips Booked</Link>
+                <div className="dropdown-divider" />
+                <Link className="dropdown-item" to="#">Cancel requests</Link>
               </div>
             </li>
+            <li className="nav-item dropdown">
+            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Trip
+            </a>
+            <div className="dropdown-menu" aria-labelledby="navbarDropdown">        
+              <Link className="dropdown-item" to="/admin/updatetrip">Update Trip</Link>
+              <div className="dropdown-divider" />
+              <Link className="dropdown-item" to="/admin/deletetrip">Delete Trip</Link>
+            </div>
+          </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/user/bookings/all">Bookings</Link>
+              <Link className="nav-link" to="#">Approve Payments</Link>
             </li>
           </ul>
 

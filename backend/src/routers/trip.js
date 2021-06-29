@@ -4,6 +4,9 @@ const router = new express.Router()
 const Trip = require('../models/trip')
 const Booking = require('../models/booking')
 const auth = require('../middleware/auth')
+const mongoose = require('mongoose')
+const TravelAgency = require('../models/travelAgency')
+const User = require('../models/user')
 
 
 
@@ -13,22 +16,51 @@ const auth = require('../middleware/auth')
 // to create a new trip
 router.post('/trip/create', auth, async (req, res) =>{
 
-    if(req.travelagency || req.user.role == "admin"){    
 
+    if(req.travelagency){
+        let owner = req.travelagency._id;
+    
+    console.log("owner TRAVEL AGENCY: ",owner)
+        
         const trip = Trip({
                 ...req.body,
-                owner: req.travelagency._id
+                owner: owner,
+                ownerModel:'TravelAgency'
         });
 
         try{
 
             await trip.save();
-            res.status(201).send(trip);
+           return res.status(201).send(trip);
         }
         catch(e){
             res.status(400).send(e);
         }
+
     }
+
+    if(req.user.role == "admin"){
+        let owner = req.user._id;
+    
+    console.log("owner ADMIN: ",owner)
+        
+        const trip = Trip({
+                ...req.body,
+                owner: owner,
+                ownerModel:'User'
+        });
+
+        try{
+
+            await trip.save();
+           return res.status(201).send(trip);
+        }
+        catch(e){
+            res.status(400).send(e);
+        }
+
+    }
+   
     else{
         res.status(404).send('Please authenticate as a travel agency!')
     }
@@ -37,12 +69,19 @@ router.post('/trip/create', auth, async (req, res) =>{
 // to delete a trip
 router.delete('/trip/delete/:id', auth, async(req, res) =>{
 
-    if(req.travelagency){    
+    if(req.travelagency || req.user.role == "admin"){    
         const ID = req.params.id;
+        let trip = null;
         try{
-
-            const trip = await Trip.findByIdAndDelete({ _id: ID, owner: req.travelagency._id, maxTimeMS: 1  })
+            if(req.travelagency){
+            trip = await Trip.findByIdAndDelete({ _id: ID, owner: req.travelagency._id, maxTimeMS: 1  })
             await Booking.findOneAndDelete({ trip: ID })
+            }
+
+            else if(req.user){
+                trip = await Trip.findByIdAndDelete({ _id: ID, maxTimeMS: 1  })
+                await Booking.findOneAndDelete({ trip: ID })
+            }
             if(!trip){
                 res.status(404).send()
             }
@@ -64,8 +103,14 @@ router.delete('/trip/delete/:id', auth, async(req, res) =>{
 router.get("/trip/travelagency/all", auth, async (req, res) =>{
 
     try{
+        if(req.travelagency){
         await req.travelagency.populate('trips').execPopulate()
-        res.send(req.travelagency.trips)
+        return res.send(req.travelagency.trips)
+        }
+        else if(req.user.role == "admin"){
+            await req.user.populate('trips').execPopulate()
+            return res.send(req.user.trips)
+        }
     }
     catch(e){
         res.status(404).send()
@@ -115,7 +160,11 @@ router.get('/trip/:id', async (req, res) =>{
     try{
         const trip = await Trip.findById({ _id: id });
         await trip.populate('owner').execPopulate();
-        res.send(trip);
+
+
+            return res.send(trip);
+        
+
     }
     catch(e){
         res.send();
@@ -126,8 +175,10 @@ router.get('/trip/:id', async (req, res) =>{
 // update a trip
 router.patch('/trip/update/:id', auth, async(req, res) =>{
 
-    if(req.travelagency){
+    if(req.travelagency || req.user.role == "admin"){
+
         const id = req.params.id;
+        let trip = null;
         const updates = Object.keys(req.body)
         const allowedUpdates = ['title','images','itinerary','days','description','included','seats','startingDateAndTime','endingDateAndTime']
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
@@ -135,9 +186,14 @@ router.patch('/trip/update/:id', auth, async(req, res) =>{
         if(!isValidOperation){
             return res.status(400).send({ error: 'Invalid update!' })
         }
-
-        const trip = await Trip.findOne({ _id: id, owner: req.travelagency._id })
+        if(req.travelagency){
+        trip = await Trip.findOne({ _id: id, owner: req.travelagency._id })
         const bookings = await Booking.find({ trip: id })
+        }
+        else if(req.user){
+        trip = await Trip.findOne({ _id: id })
+        const bookings = await Booking.find({ trip: id })
+        }
         try{
             if(!trip){
                 return res.status(404).send()
@@ -157,6 +213,8 @@ router.patch('/trip/update/:id', auth, async(req, res) =>{
         }
     }
 })
+
+
 
 
 

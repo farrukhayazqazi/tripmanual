@@ -52,7 +52,7 @@ class DeleteTrip extends Component {
   
                 : 
                 <p>No trip available :)</p>   
-          }
+                }
           </div>
 
 

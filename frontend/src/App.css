@@ -519,17 +519,21 @@ border-radius: 50%;
 }
 
 .card-tripListing h4{
-  margin-left: -245px;
+padding-right: 200px;
+margin-left: -150px;
 }
 
 .card-tripListing p{
-  margin-left: -245px;
+  
+  margin-left: -150px;
   text-align: left;
 }
 
 .card-tripListing{
   margin-top: 15px;
 }
+
+
 
 .location-menu{
   margin-top: 20px;

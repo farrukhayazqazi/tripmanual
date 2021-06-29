@@ -28,6 +28,9 @@ import ViewTrip from './components/travelAgency/ViewTrip';
 import DeleteTrip from './components/travelAgency/DeleteTrip';
 import UpdateTripPage from './components/travelAgency/UpdateTripPage';
 import UpdateTrip from './components/travelAgency/UpdateTrip';
+import UpdateTripAdminPage from './components/admin/UpdateTripAdminPage';
+import UpdateTripAdmin from './components/admin/UpdateTripAdmin';
+import DeleteTripAdmin from './components/admin/DeleteTripAdmin';
 import ViewBookings from './components/travelAgency/ViewBookings';
 
 
@@ -143,7 +146,6 @@ componentDidMount = async () =>{
                                                                   })
                                                                 
       console.log("response.data in login react user: ",response.data)
-      console.log("response.data.user.role in login react user: ",response.data.user.role)
       
     try{
       if(response.data.token){
@@ -312,11 +314,20 @@ const createTrip = async (trip) =>{
 const deleteTrip = async (tripID) =>{
 
   let token = localStorage.getItem("token")
-  const response = await axios.delete(`${BASIC_URL}/trip/delete/${tripID}`,
+  const { travelAgencyAuthenticated, adminAuthenticated } = this.state;
+  let response = null
+  if(travelAgencyAuthenticated){
+  response = await axios.delete(`${BASIC_URL}/trip/delete/${tripID}`,
   {
     headers: { "Authorization": `Bearer ${token}` }
   })
-
+  }
+  else if(adminAuthenticated){
+   response = await axios.delete(`${BASIC_URL}/admin/trip/delete/${tripID}`,
+  {
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+  }
   try{
     if(response.data){
       const trips = this.state.trips.filter(trip => trip._id !== tripID)
@@ -326,15 +337,18 @@ const deleteTrip = async (tripID) =>{
   catch(e){
     console.log("Unable to create trip!",e);
   }
-
+  
   
 }
 
 const updateTrip = async (trip) =>{
 
   let token = localStorage.getItem("token");
-console.log(trip._id)
-  const response = await axios.patch(`${BASIC_URL}/trip/update/${trip._id}`,
+
+const { travelAgencyAuthenticated, adminAuthenticated } = this.state;
+let response = null
+  if(travelAgencyAuthenticated ){
+    response = await axios.patch(`${BASIC_URL}/trip/update/${trip._id}`,
             {
               title: trip.title,
               days: trip.days,
@@ -348,8 +362,23 @@ console.log(trip._id)
             }, {
               headers: { "Authorization": `Bearer ${token}` }
             })
-
-            console.log("response.data in updateTrip react js: ",response.data)
+  }
+  else if(adminAuthenticated){
+     response = await axios.patch(`${BASIC_URL}/admin/trip/update/${trip._id}`,
+              {
+                title: trip.title,
+                days: trip.days,
+                images: trip.images,
+                description: trip.description,
+                itinerary: trip.itinerary,
+                included: trip.included,
+                seats: trip.seats,
+                startingDateAndTime: trip.startingDateAndTime,
+                endingDateAndTime: trip.endingDateAndTime
+              }, {
+                headers: { "Authorization": `Bearer ${token}` }
+              })
+    }
             try{
               if(response.data){
                 let trips = this.state.trips.filter(tripp => tripp._id !== trip._id)
@@ -427,6 +456,9 @@ return (
     {/*User Routes*/}
     <UserGuardedRoute path='/user/bookings/all' component={UserBookings} mapBookingsToMainState={mapBookingsToMainState} bookings={this.state.bookings} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
     <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} createBooking={createBooking} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
+    <UserGuardedRoute exact path='/admin/updatetrip'    component={UpdateTripAdminPage}  updateTrip={updateTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
+    <UserGuardedRoute exact path='/admin/updatetrip/:id'    component={UpdateTripAdmin}  updateTrip={updateTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
+    <UserGuardedRoute exact path='/admin/deletetrip'    component={DeleteTripAdmin}  deleteTrip={deleteTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
     <UserAuthCheck path='/user/login/'  component={Login}  authenticate={authenticate}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
     <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
     

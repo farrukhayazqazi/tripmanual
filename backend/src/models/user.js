@@ -71,6 +71,13 @@ userSchema.virtual('bookings',{
     foreignField: 'user'
 })
 
+// virtual property set up to make the relationship b/w admin user and trips .
+userSchema.virtual('trips',{
+    ref: "Trip",
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 
 // only returning non-confidential data back into JSON
 userSchema.methods.toJSON = function() {
@@ -124,6 +131,12 @@ userSchema.pre('save', async function(next){
     next()
 })
 
+// if the admin user is deleted remove the trips associated with it
+userSchema.pre('remove', async function(next){
+    const admin = this
+    await Trip.deleteMany({ owner: admin._id })
+    next()
+})
 
 
 const User = mongoose.model('User', userSchema)

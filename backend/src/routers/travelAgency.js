@@ -73,7 +73,24 @@ router.get('/travelAgency/getBookings', auth, async (req, res) =>{
 
         try{
 
-            const bookings = await Booking.find({ "trip_details.owner._id" : req.travelagency._id.toString() || req.user._id.toString()  })
+            const bookings = await Booking.find({ "trip_details.owner._id" : req.travelagency._id.toString()  })
+            console.log("bookings: ",bookings)
+            // await bookings.populate().execPopulate();
+            // const user = await User.findById({ _id: bookings.user._id.toString() })
+            // bookings[user] = user;
+            // console.log(bookings)
+            res.send(bookings)
+        }
+        catch(e){
+            res.send();
+        }
+    }
+
+    else if(req.user.role == "admin"){
+
+        try{
+
+            const bookings = await Booking.find({ "trip_details.owner._id" : req.user._id.toString() })
             console.log("bookings: ",bookings)
             // await bookings.populate().execPopulate();
             // const user = await User.findById({ _id: bookings.user._id.toString() })

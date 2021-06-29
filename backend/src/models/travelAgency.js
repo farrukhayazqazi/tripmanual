@@ -116,7 +116,12 @@ travelAgencySchema.pre('save', async function(next){
     next()
 })
 
-
+// if the travel agency is deleted remove the trips associated with it
+travelAgencySchema.pre('remove', async function(next){
+    const travelagency = this
+    await Trip.deleteMany({ owner: travelagency._id })
+    next()
+})
 
 const TravelAgency = mongoose.model('TravelAgency', travelAgencySchema)
 

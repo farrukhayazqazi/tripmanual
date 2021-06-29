@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const User = require('./user');
+const TravelAgency = require('./travelAgency');
 
 
 const tripSchema = new mongoose.Schema({
@@ -91,9 +93,31 @@ const tripSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'TravelAgency'
+        refPath: 'ownerModel'
+    },
+    ownerModel:{
+        type:String,
+        required:true,
+        enum:['TravelAgency','User']
     }
+
 })
+
+// // to setup a relationship between admin user and trips
+// tripSchema.virtual('fromadminuser',{
+//     ref:'User',
+//     localField: 'owner',
+//     foreignField: '_id',
+//     // justOne: true
+// })
+
+// // to setup a relationship between admin user and trips
+// tripSchema.virtual('fromtravelagency',{
+//     ref:'TravelAgency',
+//     localField: 'owner',
+//     foreignField: '_id',
+//     // justOne: true
+// })
 
 // virtual property set up to make the relationship b/w trip and bookings.
 tripSchema.virtual('bookings',{

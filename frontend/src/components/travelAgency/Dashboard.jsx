@@ -91,8 +91,8 @@ class Dashboard extends Component {
               ?
               this.props.trips.map(trip => (
                 <div className="trip-card" key={trip._id}>
-                <div className="card" style={{width: '15rem'}}>
-                <img className="card-img-top img-thumbnail" src={trip.images[0]} alt="Card image cap" />
+                <div className="card" style={{width: '14rem'}}>
+                <img className="card-img-top img-thumbnail" style={{height:'13rem' }} src={trip.images[0]} alt="Card image cap" />
                 <div className="card-body">
                   <Link className="card-title trip-card-title" to={`/travelAgency/trip/${trip._id}`} ><b>{trip.title}</b></Link>
                 </div>

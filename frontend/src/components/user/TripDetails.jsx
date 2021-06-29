@@ -37,23 +37,29 @@ class TripDetails extends Component{
         <br/><br/><br/>
         {this.state.trip ? (<>
 
-        <h2>{this.state.trip.title}</h2>
+        <h2 style={{"fontFamily":"axis"}} ><b>{this.state.trip.title}</b></h2>
         <br/>
       <div className="row">
         <div className="col-8">
         <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
         <ol className="carousel-indicators">
-          <li data-target="#carouselExampleIndicators" data-slide-to={0} className="active" />
-          <li data-target="#carouselExampleIndicators" data-slide-to={1} />
-          <li data-target="#carouselExampleIndicators" data-slide-to={2} />
+        {this.state.trip.images.map((trip, index) =>(<>
+          <li data-target="#carouselExampleIndicators" data-slide-to={index} className={ index == 0 ? "active" : "" } />
+          </>))}
         </ol>
+
         <div className="carousel-inner">
         {this.state.trip.images.map((image, index) => (
         <div className={`carousel-item ${index == 0 ? "active" : ""}`} key={index}>
             <img className="d-block w-100" src={image} alt="First slide" />
+          <div className="carousel-caption d-none d-md-block">
+            <h5><span className="badge badge-pill badge-dark">{index+1}/{this.state.trip.images.length}</span></h5>
+          </div>
         </div>
         ))}
         </div>
+
+        {this.state.trip.images.length > 1 ? (<>
         <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
           <span className="carousel-control-prev-icon" aria-hidden="true" />
           <span className="sr-only">Previous</span>
@@ -62,10 +68,12 @@ class TripDetails extends Component{
           <span className="carousel-control-next-icon" aria-hidden="true" />
           <span className="sr-only">Next</span>
         </a>
+        </>) : (null)}
         <br/>
         <br/>
         <br/>
         </div>
+
         </div>
 
         <div className="col-4">
@@ -75,7 +83,10 @@ class TripDetails extends Component{
           Trip Manual
         </div>
         <div className="card-body">
-        <h6>Tour Operator: <b> {this.state.trip.owner.name}</b></h6><br/>
+        {console.log("trip fromadminuser: ",this.state.trip.fromadminuser)}
+        {console.log("trip.owner.firstName ",this.state.trip.owner.firstName)}
+        <h6>Tour Operator: <b> {this.state.trip.owner.name ? this.state.trip.owner.name : this.state.trip.owner.firstName }</b></h6>
+        <br/>
         <h6>Available Seats: <b>{this.state.trip.seats}</b></h6><br/>
         <h6>Days: <b>{this.state.trip.days}</b></h6><br/>
         <h6>Departure from: <b>{this.state.trip.city}</b></h6><br/>
