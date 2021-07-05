@@ -110,6 +110,23 @@ router.delete('/admin/trip/delete/:id', auth, async(req, res) =>{
 
 })
 
+// to find a specific booking
+router.get('/admin/booking/:id', auth, async (req, res) =>{
+
+    if(req.user.role == "admin"){
+    let id = req.params.id;
+
+    try{
+        const booking = await Booking.findById({ _id: id });
+        return res.send(booking);
+    }
+    catch(e){
+        res.send();
+    }
+    }
+
+})
+
 
 module.exports = router
 

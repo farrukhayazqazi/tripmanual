@@ -32,6 +32,8 @@ import UpdateTripAdminPage from './components/admin/UpdateTripAdminPage';
 import UpdateTripAdmin from './components/admin/UpdateTripAdmin';
 import DeleteTripAdmin from './components/admin/DeleteTripAdmin';
 import ViewBookings from './components/travelAgency/ViewBookings';
+import ApprovePayments from './components/admin/ApprovePayments';
+import ApprovePaymentPage from './components/admin/ApprovePaymentPage';
 
 
 class App extends Component {
@@ -193,7 +195,8 @@ const createBooking = async (booking) =>{
               trip_details: booking.trip,
               seats_booked: booking.travelersDetail.length,
               traveler_details: booking.travelersDetail,
-              total_amount: booking.totalAmount
+              total_amount: booking.totalAmount,
+              payment_screenshot: booking.paymentScreenshot
             }, {
               headers: { "Authorization": `Bearer ${token}` }
             })
@@ -455,9 +458,11 @@ return (
 
     {/*User Routes*/}
     <UserGuardedRoute path='/user/bookings/all' component={UserBookings} mapBookingsToMainState={mapBookingsToMainState} bookings={this.state.bookings} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
-    <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} createBooking={createBooking} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
+    <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} mapBookingsToMainState={mapBookingsToMainState} createBooking={createBooking} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
     <UserGuardedRoute exact path='/admin/updatetrip'    component={UpdateTripAdminPage}  updateTrip={updateTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
     <UserGuardedRoute exact path='/admin/updatetrip/:id'    component={UpdateTripAdmin}  updateTrip={updateTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
+    <UserGuardedRoute exact path='/admin/approvePayments'    component={ApprovePayments} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
+    <UserGuardedRoute exact path='/admin/approvePayment/:id'    component={ApprovePaymentPage} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
     <UserGuardedRoute exact path='/admin/deletetrip'    component={DeleteTripAdmin}  deleteTrip={deleteTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
     <UserAuthCheck path='/user/login/'  component={Login}  authenticate={authenticate}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
     <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />

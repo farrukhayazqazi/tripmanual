@@ -96,6 +96,7 @@ router.post('/user/createBooking', auth, async (req, res) =>{
 
         const booking = Booking({
                 ...req.body,
+                status: 'pending',
                 user: req.user._id
         });
 

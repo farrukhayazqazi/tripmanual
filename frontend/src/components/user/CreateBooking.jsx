@@ -63,7 +63,7 @@ class CreateBooking extends Component{
   }
 
     // handleSubmit
-    handleSubmit = (e) =>{
+    handleSubmit = async (e) =>{
       e.preventDefault();
       if( this.state.travelersDetail.firstName == "",
           this.state.travelersDetail.lastName == "" ,
@@ -78,6 +78,11 @@ class CreateBooking extends Component{
       }
       console.log("trip.owner: ",this.state.trip.owner)
       this.props.createBooking(this.state);
+      const token = localStorage.getItem("token");
+      const bookings = await axios.get("http://localhost:5000/user/bookings/all", { headers: { "Authorization": `Bearer ${token}` } });
+      if(bookings.data){
+        this.props.mapBookingsToMainState(bookings.data);
+      }
       this.props.history.push('/user/bookings/all')
       console.log("state CreateBooking: ",this.state)
     }

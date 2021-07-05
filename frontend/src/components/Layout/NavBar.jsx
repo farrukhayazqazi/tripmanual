@@ -135,7 +135,7 @@ class NavBar extends Component{
             </div>
           </li>
             <li className="nav-item">
-              <Link className="nav-link" to="#">Approve Payments</Link>
+              <Link className="nav-link" to="/admin/approvePayments">Approve Payments</Link>
             </li>
           </ul>
 

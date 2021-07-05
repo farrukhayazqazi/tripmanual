@@ -35,6 +35,11 @@ const bookingSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+
+    payment_screenshot:{
+        type: Array,
+        required: true
+    },
     
     status:{
         type: String,

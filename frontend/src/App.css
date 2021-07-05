@@ -593,3 +593,15 @@ margin-left: -150px;
 .heading{
   padding-bottom: 20px;
 }
+
+.approve-bookings{
+  text-align: center;
+  justify-content: center;
+}
+
+.approve-bookings .card{
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+}
