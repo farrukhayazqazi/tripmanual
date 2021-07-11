@@ -121,7 +121,7 @@ class NavBar extends Component{
                 <div className="dropdown-divider" />
                 <Link className="dropdown-item" to="/travelAgency/getBookings">Trips Booked</Link>
                 <div className="dropdown-divider" />
-                <Link className="dropdown-item" to="#">Cancel requests</Link>
+                <Link className="dropdown-item" to="/admin/all/bookings">All bookings</Link>
               </div>
             </li>
             <li className="nav-item dropdown">
@@ -190,18 +190,10 @@ class NavBar extends Component{
               <NavLink className="nav-link" to="/">Home <span className="sr-only"></span></NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">Link</a>
+              <a className="nav-link" href="/about">About</a>
             </li>
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown
-              </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a className="dropdown-item" href="#">Action</a>
-                <a className="dropdown-item" href="#">Another action</a>
-                <div className="dropdown-divider" />
-                <a className="dropdown-item" href="#">Something else here</a>
-              </div>
+            <li className="nav-item">
+            <a className="nav-link" href="/contact">Contact</a>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/user/bookings/all">Bookings</Link>

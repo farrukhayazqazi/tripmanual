@@ -33,10 +33,10 @@ class Login extends Component{
               <div className="form-style">
                 <form  onSubmit={this.handleSubmit} >                                    
                   <div className="form-group pb-3">    
-                    <input type="email" placeholder="Email" className="form-control" onChange={this.handleChange} id="email" aria-describedby="emailHelp" />   
+                    <input type="email" placeholder="Email" required="true" className="form-control" onChange={this.handleChange} id="email" aria-describedby="emailHelp" />   
                   </div>
                   <div className="form-group pb-3">   
-                    <input type="password" placeholder="Password" className="form-control" onChange={this.handleChange} id="password" />
+                    <input type="password" placeholder="Password" required="true" className="form-control" onChange={this.handleChange} id="password" />
                   </div>
                   <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center"><input name type="checkbox" defaultValue /> <span className="pl-2 font-weight-bold">Remember Me</span></div>

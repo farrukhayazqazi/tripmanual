@@ -2,6 +2,7 @@ import React from 'react'
 import Trips from './Trips'
 import { Link } from 'react-router-dom'
 import { Component } from 'react'
+import axios from 'axios'
 
 
 class Banner extends Component{
@@ -12,6 +13,11 @@ class Banner extends Component{
 
   handleChange = (e) =>{
     this.setState({ [e.target.id]: e.target.value })
+  }
+
+  componentDidMount = async () =>{
+    const trips = await axios.get("http://localhost:5000/trips/latest");
+    this.props.mapTripsToState(trips.data)
   }
 
 

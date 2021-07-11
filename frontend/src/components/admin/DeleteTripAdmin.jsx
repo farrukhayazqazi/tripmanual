@@ -15,7 +15,7 @@ class DeleteTripAdmin extends Component {
         const token = localStorage.getItem("token")
         const response = await axios.get("http://localhost:5000/admin/trips/latest", { headers: { "Authorization": `Bearer ${token}` } });
         if(response.data){
-            console.log(response.data)
+            console.log("DELETETRIPADMIN: ",response.data)
             return this.setState({ trips:response.data })
         }
     }
@@ -34,7 +34,8 @@ class DeleteTripAdmin extends Component {
         e.preventDefault();
         console.log("id in state: ",this.state.tripId)
         this.props.deleteTrip(this.state.tripId);
-        this.props.history.push('/admin/deletetrip')
+        alert('Trip deleted successfully!')
+        this.props.history.push('/')
         const trips = this.state.trips.map(trip => trip._id !== this.state.tripId)
         this.setState({ trips: trips })
     }
@@ -75,7 +76,7 @@ render() {
 
               <div className="trip-card" key={trip._id}>
               <div className="card" style={{width: '12rem'}}>
-              <img className="card-img-top img-thumbnail" src={trip.images[0]} alt="Card image cap" style={{height:'10rem'}} />
+              <img className="card-img-top img-thumbnail" src={trip.images ? trip.images.map(img =>{return img}) : null} alt="Card image cap" style={{height:'10rem'}} />
               <div className="card-body">
                 <Link className="card-title trip-card-title" to={`/travelAgency/trip/${trip._id}`} ><b>{trip.title}</b></Link>
               </div>

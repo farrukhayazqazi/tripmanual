@@ -8,15 +8,20 @@ class UserBookings extends Component{
     bookings: []
   }
 
-  // componentDidMount = async () =>{
-  //   const token = localStorage.getItem("token");
-  //   const bookings = await axios.get("http://localhost:5000/user/bookings/all", { headers: { "Authorization": `Bearer ${token}` } });
-  //   if(bookings.data){
-  //     this.props.mapBookingsToMainState(bookings.data);
-  //     this.setState({ bookings: bookings.data })
-  //   }
-  // } 
+  componentDidMount = async () =>{
+    const token = localStorage.getItem("token");
+    const bookings = await axios.get("http://localhost:5000/user/bookings/all", { headers: { "Authorization": `Bearer ${token}` } });
+    if(bookings.data){
+      this.props.mapBookingsToMainState(bookings.data);
+      this.setState({ bookings: bookings.data })
+    }
+  } 
 
+  cancelBooking = (e, booking) =>{
+    e.preventDefault();
+    this.props.cancelBooking(booking);
+    this.props.history.push("/")
+  }
 
   render(){
     return (
@@ -38,7 +43,7 @@ class UserBookings extends Component{
                         <h6>booking ID: <b>{booking._id}</b></h6>
                         <h6>seats booked: <b>{booking.seats_booked}</b></h6>
                         <h6>status: <b>{booking.status}</b></h6>
-                        <button type="button" className="btn btn-secondary">Cancel Booking</button>
+                        <button type="button" onClick={(e) => this.cancelBooking(e, booking)} className="btn btn-secondary">Cancel Booking</button>
                       </div>
                       </div>
                       </div>

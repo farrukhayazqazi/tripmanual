@@ -10,7 +10,7 @@ const Card = ({trips}) =>{
         <h4 class="heading-1" style={{"font-family": "carson"}}><span><b>Places you would love to visit</b></span></h4>
         </div>
           <div className="row">
-          {trips ? trips.map((trip, index) =>( 
+          {trips.length > 0 ? trips.map((trip, index) =>( 
           <div className="trip-card">
           
           

@@ -127,6 +127,89 @@ router.get('/admin/booking/:id', auth, async (req, res) =>{
 
 })
 
+// to approve a payment for a booking
+router.post('/admin/approvePayments', auth, async (req, res) =>{
+    if(req.user.role){
+        try{
+            const booking = await Booking.findById({ _id: req.body.ID })
+            booking.status = "verified/paid"
+            await booking.save()
+            return res.send(booking)        
+        }
+        catch(e){
+            console.log(e)
+        }
+    }
+})
+
+// to deny a payment for a booking
+router.post('/admin/denyPayments', auth, async (req, res) =>{
+    if(req.user.role){
+        try{
+            const booking = await Booking.findById({ _id: req.body.ID })
+            booking.status = "denied"
+            await booking.save()
+            return res.send(booking)        
+        }
+        catch(e){
+            console.log(e)
+        }
+    }
+})
+
+// to cancel a booking
+router.post('/admin/cancelBooking', auth, async (req, res) =>{
+    if(req.user.role){
+        try{
+            const booking = await Booking.findById({ _id: req.body.ID })
+            booking.status = "cancelled"
+            await booking.save()
+            return res.send(booking)        
+        }
+        catch(e){
+            console.log(e)
+        }
+    }
+})
+
+// to get all the pending bookings of the user
+router.get('/admin/bookings/all/pending', auth, async (req, res) =>{
+
+    if(req.user.role == "admin"){    
+
+        const bookings = await Booking.find({ status: "pending" })
+        
+        try{
+            res.status(200).send(bookings);
+        }
+        catch(e){
+            res.status(404).send(e);
+        }
+    }
+    else{
+        res.status(401).send('Please authenticate!')
+    }
+})
+
+// to get all the bookings of the users
+router.get('/admin/all/bookings', auth, async (req, res) =>{
+
+    if(req.user.role == "admin"){    
+
+        const bookings = await Booking.find()
+        
+        try{
+            res.status(200).send(bookings);
+        }
+        catch(e){
+            res.status(404).send(e);
+        }
+    }
+    else{
+        res.status(401).send('Please authenticate!')
+    }
+})
+
 
 module.exports = router
 

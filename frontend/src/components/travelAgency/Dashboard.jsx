@@ -22,7 +22,7 @@ class Dashboard extends Component {
           console.log("Trips are retrieved: ",response.data);
           const trips = response.data
           // this.setState({trips})
-          this.props.mapTripsToState(trips);
+          this.props.mapDashboardTripsToState(trips);
         }
         catch(e){
           console.log("Unable to retrieve trips!")

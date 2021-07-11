@@ -34,7 +34,9 @@ import DeleteTripAdmin from './components/admin/DeleteTripAdmin';
 import ViewBookings from './components/travelAgency/ViewBookings';
 import ApprovePayments from './components/admin/ApprovePayments';
 import ApprovePaymentPage from './components/admin/ApprovePaymentPage';
-
+import AllBookings from './components/admin/AllBookings';
+import About from './components/user/About';
+import Contact from './components/user/Contact'
 
 class App extends Component {
 
@@ -45,15 +47,17 @@ class App extends Component {
     name: [],
     errors: [],
     trips: [],
-    bookings: []
+    dashboardTrips:[],
+    bookings: [],
+    cancelRequests: []
   }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 componentDidMount = async () =>{
 
   const token = localStorage.getItem("token");
   console.log("token: ",token)
-  const trips = await axios.get("http://localhost:5000/trips/latest");
-     this.setState({ trips: trips.data })
+  // const trips = await axios.get("http://localhost:5000/trips/latest");
+  //    this.setState({ trips: trips.data })
 
     try{
       if(token){
@@ -304,8 +308,10 @@ const createTrip = async (trip) =>{
 
             try{
               if(response.data){
-                let trips = [...this.state.trips, response.data]
-                this.setState({ trips })
+                // let trips = [...this.state.trips, response.data]
+                // this.setState({ trips })
+                const trips = await axios.get("http://localhost:5000/trips/latest");
+                this.setState({ trips: trips.data })
               }
             }
             catch(e){
@@ -333,8 +339,10 @@ const deleteTrip = async (tripID) =>{
   }
   try{
     if(response.data){
-      const trips = this.state.trips.filter(trip => trip._id !== tripID)
-      this.setState({ trips })
+      // const trips = this.state.trips.filter(trip => trip._id !== tripID)
+      // this.setState({ trips })
+      const trips = await axios.get("http://localhost:5000/trips/latest");
+      this.setState({ trips: trips.data })
     }
   }
   catch(e){
@@ -384,9 +392,11 @@ let response = null
     }
             try{
               if(response.data){
-                let trips = this.state.trips.filter(tripp => tripp._id !== trip._id)
-                trips.push(response.data);
-                this.setState({ trips })
+                // let trips = this.state.trips.filter(tripp => tripp._id !== trip._id)
+                // trips.push(response.data);
+                // this.setState({ trips })
+                const trips = await axios.get("http://localhost:5000/trips/latest");
+                this.setState({ trips: trips.data })
                 alert('Trip Updated!')
               }
             }
@@ -403,6 +413,74 @@ let response = null
 
 const mapBookingsToMainState = (bookings) =>{
   this.setState({bookings});
+}
+///////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////ADMIN RELATED//////////////////////////
+const approvePayment = async (ID) =>{
+  console.log("inside approvePayment in frontend")
+  const token = localStorage.getItem("token")
+  const response = await axios.post(`${BASIC_URL}/admin/approvePayments`, {
+    ID: ID
+  },{
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+
+  console.log("response.data in approve payments: ",response.data)
+  try{
+    if(response.data){
+      alert(`Payment for Booking ID: ${ID} is approved`)
+    }
+  }
+  catch(e){
+    console.log(e)
+  }
+
+}
+
+const denyPayment = async (ID) =>{
+  console.log("inside denyPayment in frontend")
+  const token = localStorage.getItem("token")
+  const response = await axios.post(`${BASIC_URL}/admin/denyPayments`, {
+    ID: ID
+  },{
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+
+  console.log("response.data in deny payments: ",response.data)
+  try{
+    if(response.data){
+      alert(`Payment for Booking ID: ${ID} is denied!`)
+    }
+  }
+  catch(e){
+    console.log(e)
+  }
+
+}
+
+const cancelRequest = async (booking) =>{
+  this.setState({ cancelRequests: [...this.state.cancelRequests, booking] })
+}
+
+
+const cancelBooking = async (booking) =>{
+  const token = localStorage.getItem("token")
+  const response = await axios.post(`${BASIC_URL}/admin/cancelBooking`, {
+    ID: booking._id
+  },{
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+
+  console.log("response.data in cancelBooking: ",response.data)
+  try{
+    if(response.data){
+      alert(`Booking ID: ${booking._id} is canceled!`)
+    }
+  }
+  catch(e){
+    console.log(e)
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -425,6 +503,14 @@ const mapBookingsToMainState = (bookings) =>{
 
 const mapTripsToState = (trips) =>{
   this.setState({trips});
+}
+
+const mapDashboardTripsToState = (dashboardTrips) =>{
+  this.setState({dashboardTrips});
+}
+
+const mapCancelRequestsToMainState = (bookings) =>{
+  this.setState({ cancelRequests: bookings })
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -452,24 +538,27 @@ return (
     <BrowserRouter>
     <div className="App">
     <Route render={(props) => <NavBar {...props} mapTripsToState={mapTripsToState} userAuthenticated={this.state.userAuthenticated} adminAuthenticated={this.state.adminAuthenticated} travelAgencyAuthenticated={this.state.travelAgencyAuthenticated} logout={logout} name={this.state.name} /> } />
-    <Route exact path='/' render={(props) => <Banner trips={this.state.trips} {...props} /> } />
+    <Route exact path='/' render={(props) => <Banner trips={this.state.trips} mapTripsToState={mapTripsToState} {...props} /> } />
+    <Route exact path='/about' render={(props) => <About {...props} /> } />
+    <Route exact path='/contact' render={(props) => <Contact {...props} /> } />
     <Route path='/user/tripListing/:id' render={(props) => <TripListing {...props} mapTripsToState={mapTripsToState} trips={this.state.trips} /> } />
     <Route path='/user/trip/:id' render={(props) => <TripDetails {...props} /> } />
 
     {/*User Routes*/}
-    <UserGuardedRoute path='/user/bookings/all' component={UserBookings} mapBookingsToMainState={mapBookingsToMainState} bookings={this.state.bookings} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
+    <UserGuardedRoute path='/user/bookings/all' component={UserBookings} cancelBooking={cancelBooking} mapBookingsToMainState={mapBookingsToMainState} bookings={this.state.bookings} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
     <UserGuardedRoute path='/user/BookingDetails/:id' component={CreateBooking} mapBookingsToMainState={mapBookingsToMainState} createBooking={createBooking} auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} /> 
     <UserGuardedRoute exact path='/admin/updatetrip'    component={UpdateTripAdminPage}  updateTrip={updateTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
     <UserGuardedRoute exact path='/admin/updatetrip/:id'    component={UpdateTripAdmin}  updateTrip={updateTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
-    <UserGuardedRoute exact path='/admin/approvePayments'    component={ApprovePayments} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
-    <UserGuardedRoute exact path='/admin/approvePayment/:id'    component={ApprovePaymentPage} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
+    <UserGuardedRoute exact path='/admin/all/bookings'    component={AllBookings}  auth={this.state.adminAuthenticated}  />
+    <UserGuardedRoute exact path='/admin/approvePayments'    component={ApprovePayments} denyPayment={denyPayment} approvePayment={approvePayment} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
+    <UserGuardedRoute exact path='/admin/approvePayment/:id'    component={ApprovePaymentPage} denyPayment={denyPayment} approvePayment={approvePayment} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
     <UserGuardedRoute exact path='/admin/deletetrip'    component={DeleteTripAdmin}  deleteTrip={deleteTrip} trips={this.state.trips} auth={this.state.adminAuthenticated}  />
     <UserAuthCheck path='/user/login/'  component={Login}  authenticate={authenticate}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
     <UserSignupCheck path='/user/signup/' component={Signup}  signUp={signUp} errors={this.state.errors}   auth={this.state.adminAuthenticated ||  this.state.userAuthenticated} />
     
     {/*Travel Agency Routes*/}
-    <TravelAgencyGuardedRoute exact path='/travelAgency/dashboard'    component={Dashboard} mapTripsToState={mapTripsToState} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
-    <TravelAgencyGuardedRoute exact path='/travelAgency/createtrip' component={CreateTrip} createTrip={createTrip} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/dashboard'    component={Dashboard} mapDashboardTripsToState={mapDashboardTripsToState} trips={this.state.dashboardTrips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
+    <TravelAgencyGuardedRoute exact path='/travelAgency/createtrip' component={CreateTrip} mapTripsToState={mapTripsToState} createTrip={createTrip} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
     <TravelAgencyGuardedRoute exact path='/travelAgency/trip/:id'    component={ViewTrip}  tripOperator={this.state.name} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
     <TravelAgencyGuardedRoute exact path='/travelAgency/deletetrip'    component={DeleteTrip}  deleteTrip={deleteTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />
     <TravelAgencyGuardedRoute exact path='/travelAgency/updatetrip'    component={UpdateTripPage}  updateTrip={updateTrip} tripOperator={this.state.name} trips={this.state.trips} auth={this.state.adminAuthenticated ||  this.state.travelAgencyAuthenticated}  />

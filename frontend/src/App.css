@@ -605,3 +605,17 @@ margin-left: -150px;
   align-items: center;
   margin-top: 100px;
 }
+
+.about-us{
+margin-top: -95px;
+}
+
+.about-us h1{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bolder;
+  margin-bottom: 55px;
+}
+
+.about-us img{
+  width: 500px;
+}
