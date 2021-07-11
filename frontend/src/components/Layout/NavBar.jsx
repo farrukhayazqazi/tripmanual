@@ -190,10 +190,10 @@ class NavBar extends Component{
               <NavLink className="nav-link" to="/">Home <span className="sr-only"></span></NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/about">About</a>
+              <Link className="nav-link" to="/about">About</Link>
             </li>
             <li className="nav-item">
-            <a className="nav-link" href="/contact">Contact</a>
+            <Link className="nav-link" to="/contact">Contact</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/user/bookings/all">Bookings</Link>
