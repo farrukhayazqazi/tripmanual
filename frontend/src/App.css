@@ -619,3 +619,11 @@ margin-top: -95px;
 .about-us img{
   width: 500px;
 }
+
+.contact h1{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bolder;
+  margin-bottom: 55px;
+  margin-top: -1px;
+  padding-top: 45px;
+}

@@ -137,7 +137,7 @@ router.get('/user/bookings/all', auth, async (req, res) =>{
 router.get('/trips/latest', async (req, res) =>{
 
     try{
-        const trips = await Trip.find().sort({ _id:1 }).limit(6)
+        const trips = await Trip.find().sort({ _id:1 }).limit(3)
         res.send(trips)
     }
     catch(e){

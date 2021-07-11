@@ -22,10 +22,19 @@ class Signup extends Component{
   handleSubmit = (e) =>{
     e.preventDefault();
 
-    const { password, confirmPassword } = this.state;
+    const { password, confirmPassword, phone } = this.state;
 
     if(password !== confirmPassword){
       return alert("passwords do not match !")
+    }
+
+    if(password.length <= 6){
+      return alert("password should be atleast 7 characters long!")
+    }
+
+
+    if(phone.toString().length !== 11 ){
+      return alert("please enter correct phone number (11 digits)") 
     }
 
     this.props.signUp(this.state)
@@ -64,10 +73,9 @@ class Signup extends Component{
                   <input type="password" required="true" placeholder="Re-enter Password" className="form-control" onChange={this.handleChange} id="confirmPassword" />
                 </div>
                 <div className="form-group pb-3">    
-                <input type="tel" required="true" placeholder="Phone" className="form-control" onChange={this.handleChange} id="phone" aria-describedby="PhoneHelp" />   
+                <input type="number" required="true" placeholder="Phone" className="form-control" onChange={this.handleChange} id="phone" aria-describedby="PhoneHelp" />   
               </div>
                   <div className="d-flex align-items-center justify-content-between">
-                   
                   </div>
                   <div className="pb-2">
                     <button type="submit" className="btn btn-dark w-100 font-weight-bold mt-2">Submit</button>

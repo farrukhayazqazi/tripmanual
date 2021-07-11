@@ -15,10 +15,10 @@ router.post('/travelAgency/signup', async (req, res) =>{
 
     const { email } = req.body;
 
-    const agencyAlreadyExisits = await User.findOne({ email })
+    const agencyAlreadyExisits = await TravelAgency.findOne({ email })
 
     if(agencyAlreadyExisits){
-        return res.send({ error: "User already exists!"})
+        return res.send({ error: "Agency already exists!"})
         
     }
 
