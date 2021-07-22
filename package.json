@@ -1,0 +1,31 @@
+{
+  "name": "tripmanual",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^6.2.0",
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.12"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "install-client": "cd frontend && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "node backend/src/index.js",
+    "client": "cd frontend && npm start",
+    "concurrent": "",
+    "dev": "env-cmd -f backend/config/dev.env concurrently -n 'frontend,backend' -c 'blue,green' \"npm run client\" \"nodemon backend/src/index.js\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/farrukhayazqazi/tripmanual.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/farrukhayazqazi/tripmanual/issues"
+  },
+  "homepage": "https://github.com/farrukhayazqazi/tripmanual#readme"
+}

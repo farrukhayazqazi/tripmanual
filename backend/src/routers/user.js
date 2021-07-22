@@ -7,6 +7,9 @@ const Booking = require('../models/booking')
 const auth = require('../middleware/auth')
 
 
+router.get('/',(req,res) =>{
+    res.send("working")
+})
 
 // read the user data
 router.get('/users/me', (req, res) =>{

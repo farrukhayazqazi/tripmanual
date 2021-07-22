@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "build": "cd frontend && npm run build",
-    "install-frontend": "cd frontend && npm install",
-    "heroku-postbuild": "npm run install-frontend && npm run build"
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js"
   },
   "author": "",
   "license": "ISC",
