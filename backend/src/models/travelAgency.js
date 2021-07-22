@@ -78,7 +78,7 @@ travelAgencySchema.methods.toJSON = function() {
 // generating authentication token
 travelAgencySchema.methods.generateAuthToken = async function () {
     const travelagency = this
-    const token = jwt.sign({ _id: travelagency._id.toString() }, 'finalyearproject')
+    const token = jwt.sign({ _id: travelagency._id.toString() }, process.env.JWT_SECRET)
 
     // storing token in tokens array
     travelagency.tokens = travelagency.tokens.concat({ token })

@@ -174,7 +174,7 @@ router.get('/trip/:id', async (req, res) =>{
 
 // update a trip
 router.patch('/trip/update/:id', auth, async(req, res) =>{
-
+    console.log("/trip/update/:id")
     if(req.travelagency || req.user.role == "admin"){
 
         const id = req.params.id;
@@ -182,30 +182,30 @@ router.patch('/trip/update/:id', auth, async(req, res) =>{
         const updates = Object.keys(req.body)
         const allowedUpdates = ['title','images','itinerary','days','description','included','seats','startingDateAndTime','endingDateAndTime']
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
-
+        console.log("id here: ", id)
         if(!isValidOperation){
             return res.status(400).send({ error: 'Invalid update!' })
         }
-        if(req.travelagency){
-        trip = await Trip.findOne({ _id: id, owner: req.travelagency._id })
-        const bookings = await Booking.find({ trip: id })
-        }
-        else if(req.user){
+
         trip = await Trip.findOne({ _id: id })
         const bookings = await Booking.find({ trip: id })
-        }
+        // console.log("tripp: ",trip);    
+    
+
         try{
-            if(!trip){
-                return res.status(404).send()
-            }
+            // if(!trip){
+            //     return res.status(404).send()
+            // }
             updates.forEach(update => trip[update] = req.body[update])
             bookings.forEach(async booking =>{ 
                 booking.trip_details = trip
                 await booking.save()
             })
         
-            const tripSaved = await trip.save()    
+            const tripSaved = await trip.save()  
+       
             if( tripSaved ){
+                
             return res.send(trip)
             }
         } catch(e) {

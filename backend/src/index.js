@@ -17,6 +17,12 @@ app.use(tripRoutes)
 app.use(adminRoutes)
 app.use(travelAgencyRoutes)
 
+
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static('frontend/build'))
+}
+
+
 app.listen(port, () =>{
     console.log('Serving up on port '+port)
 })

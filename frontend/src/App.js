@@ -341,6 +341,7 @@ const deleteTrip = async (tripID) =>{
     if(response.data){
       // const trips = this.state.trips.filter(trip => trip._id !== tripID)
       // this.setState({ trips })
+      alert("trip successfully deleted!")
       const trips = await axios.get("http://localhost:5000/trips/latest");
       this.setState({ trips: trips.data })
     }
@@ -391,6 +392,7 @@ let response = null
               })
     }
             try{
+              console.log("response.dat in update trip: ", response.data)
               if(response.data){
                 // let trips = this.state.trips.filter(tripp => tripp._id !== trip._id)
                 // trips.push(response.data);

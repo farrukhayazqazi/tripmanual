@@ -20,6 +20,13 @@ class Banner extends Component{
     this.props.mapTripsToState(trips.data)
   }
 
+               
+//   <form action={`/user/tripListing/${this.state.searchValue}`}>
+//   <div className="searchbar">
+//     <input className="search_input" onChange={this.handleChange} id="searchValue" type="text" name placeholder="Search..." />
+//     <a href={`/user/tripListing/${this.state.searchValue}`} className="search_icon" ><i className="fas fa-search" /></a>
+//   </div>
+// </form>
 
   render(){
   return(
@@ -32,13 +39,7 @@ class Banner extends Component{
 
             <div className="container h-100">
             <div className="d-flex justify-content-center h-100">
-              
-            <form action={`/user/tripListing/${this.state.searchValue}`}>
-              <div className="searchbar">
-                <input className="search_input" onChange={this.handleChange} id="searchValue" type="text" name placeholder="Search..." />
-                <a href={`/user/tripListing/${this.state.searchValue}`} className="search_icon" ><i className="fas fa-search" /></a>
-              </div>
-            </form>
+ 
   
             </div>
           </div>

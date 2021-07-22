@@ -22,7 +22,7 @@ class DeleteTrip extends Component {
         console.log("id in state: ",this.state.tripId)
         localStorage.setItem("deleteID",this.state.tripId);
         this.props.deleteTrip(this.state.tripId);
-        this.props.history.push('/travelAgency/deletetrip')
+        this.props.history.push('/travelAgency/dashboard')
     }
 
 

@@ -36,7 +36,7 @@ class UpdateTrip extends Component{
                 images:trip.images,
                 title:trip.title,
                 description:trip.description,
-                included:trip.included,
+                included:[],
                 price:trip.price,
                 city:trip.city,
                 seats:trip.seats,
@@ -269,7 +269,7 @@ class UpdateTrip extends Component{
                 { this.state.days == 1 ? (
                  
                     <div className="input-group mb-3" onSubmit={this.addItinerary}>
-                        <input required="true" type="text" className="form-control"  ref={(ip) => {this.newText = ip}} placeholder='Day 1' aria-label="Day 01" aria-describedby="basic-addon2" />
+                        <input required="true" type="text" className="form-control"  ref={(ip) => {this.newText = ip}} placeholder='Day' aria-label="Day 01" aria-describedby="basic-addon2" />
                         <button className="btn btn-outline-secondary" onClick={this.addItinerary} type="button">+</button>
                     </div>
 
