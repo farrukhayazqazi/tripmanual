@@ -103,21 +103,7 @@ const tripSchema = new mongoose.Schema({
 
 })
 
-// // to setup a relationship between admin user and trips
-// tripSchema.virtual('fromadminuser',{
-//     ref:'User',
-//     localField: 'owner',
-//     foreignField: '_id',
-//     // justOne: true
-// })
 
-// // to setup a relationship between admin user and trips
-// tripSchema.virtual('fromtravelagency',{
-//     ref:'TravelAgency',
-//     localField: 'owner',
-//     foreignField: '_id',
-//     // justOne: true
-// })
 
 // virtual property set up to make the relationship b/w trip and bookings.
 tripSchema.virtual('bookings',{
