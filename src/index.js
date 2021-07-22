@@ -5,6 +5,7 @@ const tripRoutes = require('./routers/trip')
 const travelAgencyRoutes = require('./routers/travelAgency')
 const adminRoutes = require('./routers/admin')
 const cors = require("cors")
+const path = require('path')
 
 
 const app = express();
@@ -19,7 +20,15 @@ app.use(travelAgencyRoutes)
 
 
 if(process.env.NODE_ENV === 'production'){
-      app.use(express.static('/frontend/build'))
+
+
+    // Serve static files from the React frontend app
+    app.use(express.static(path.join(__dirname, '../frontend/build')))
+
+    // AFTER defining routes: Anything that doesn't match what's above, send back index.html; (the beginning slash ('/') in the string is important!)
+    app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../frontend/build/index.html'))
+    })
 }
 
 
